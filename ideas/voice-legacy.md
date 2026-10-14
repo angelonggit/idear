@@ -2,6 +2,7 @@
 
 > 状态：早期构想，还很模糊
 > 开始于：2026-10-10
+> 类似项目调研：[voice-legacy-research.md](voice-legacy-research.md)
 
 ## 起因
 
