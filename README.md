@@ -6,3 +6,4 @@
 
 - [留声：给每个人一个说完就走的地方](ideas/voice-legacy.md)：人走之后留下即兴的声音，去中心化存放，可以交给别人，也可以就这么放着
   - [类似项目调研](ideas/voice-legacy-research.md)
+  - [每日灵感](ideas/voice-legacy-journal.md)
