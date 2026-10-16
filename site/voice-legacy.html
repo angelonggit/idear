@@ -1,0 +1,889 @@
+<title>留声</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* 版式：一张纸，一枚印。左对齐的长卷，章节像档案卷宗一样往下排；只有"签署"和"留下"用印泥红。 */
+:root {
+  --paper: #EDF0F3;
+  --surface: #F8F9FB;
+  --ink: #18202B;
+  --muted: #5A6575;
+  --line: #CBD2DB;
+  --seal: #B4232C;
+  --tape: #2F5D8A;
+  --ok: #2B7A57;
+  --warn: #A86A12;
+  --dead: #858B95;
+  --font-brush: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
+  --font-display: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1318; --surface: #161B22; --ink: #E6E9EE; --muted: #9AA4B2; --line: #29313B;
+    --seal: #E0545B; --tape: #84AEDB; --ok: #5DC08F; --warn: #E2A94C; --dead: #6E757F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1318; --surface: #161B22; --ink: #E6E9EE; --muted: #9AA4B2; --line: #29313B;
+  --seal: #E0545B; --tape: #84AEDB; --ok: #5DC08F; --warn: #E2A94C; --dead: #6E757F;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--tape); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.prose { max-width: 38em; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+#heroWave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 72px 56px; display: grid; gap: 20px; }
+.hero-title { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+.hero h1 {
+  font-family: var(--font-brush);
+  font-weight: 400;
+  font-size: clamp(88px, 18vw, 168px);
+  line-height: .95;
+  margin: 0;
+  letter-spacing: .02em;
+}
+.seal {
+  display: inline-grid;
+  place-items: center;
+  width: 64px; height: 64px;
+  border: 3px solid var(--seal);
+  color: var(--seal);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1.15;
+  text-align: center;
+  border-radius: 6px;
+  transform: rotate(-6deg);
+  margin-bottom: 18px;
+  letter-spacing: .1em;
+  animation: stamp .7s cubic-bezier(.2,1.6,.4,1) .5s both;
+}
+@keyframes stamp { from { transform: rotate(-6deg) scale(1.8); opacity: 0; } to { transform: rotate(-6deg) scale(1); opacity: 1; } }
+.hero .lede {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 3.4vw, 28px);
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: balance;
+  max-width: 22em;
+}
+.hero .sub { color: var(--muted); margin: 0; max-width: 36em; }
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+  display: flex; gap: 18px; flex-wrap: wrap;
+}
+
+/* ---------- nav ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+nav.toc {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+nav.toc .wrap { display: flex; gap: 4px 18px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+nav.toc a { white-space: nowrap; color: var(--muted); text-decoration: none; font-size: 14px; }
+nav.toc a:hover { color: var(--ink); }
+
+/* ---------- sections ---------- */
+section { padding-block: 72px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  color: var(--seal);
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.25;
+  margin: 0 0 18px;
+  text-wrap: balance;
+}
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; margin: 0 0 8px; text-wrap: balance; }
+p { margin: 0 0 14px; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* 起因 */
+.origin { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+.origin blockquote {
+  margin: 0; padding-left: 18px; border-left: 2px solid var(--line);
+  font-family: var(--font-display); font-size: 19px; line-height: 1.7;
+}
+.origin blockquote footer { font-family: var(--font-body); font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+/* 态度 */
+.creed { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 0; }
+.creed li {
+  display: grid; grid-template-columns: minmax(0, 15em) minmax(0, 1fr); gap: 8px 28px;
+  padding-block: 18px; border-top: 1px solid var(--line);
+}
+.creed li:last-child { border-bottom: 1px solid var(--line); }
+.creed strong { font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1.4; }
+.creed span { color: var(--muted); align-self: center; }
+
+/* ---------- 原型 ---------- */
+.proto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); gap: 40px; align-items: start; }
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 9 / 16;
+  margin-inline: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.edge {
+  position: absolute; top: 0; bottom: 0; width: 15%;
+  background: linear-gradient(to right, color-mix(in srgb, var(--seal) 22%, transparent), transparent);
+  opacity: 0; transition: opacity .25s;
+  pointer-events: none;
+}
+.edge.right { right: 0; transform: scaleX(-1); }
+.edge.left { left: 0; }
+.stage[data-mode="hold"] .edge, .stage[data-mode="ending"] .edge { opacity: 1; animation: edgePulse 1.2s ease-in-out infinite; }
+@keyframes edgePulse { 50% { opacity: .45; } }
+#protoWave { position: absolute; left: 0; right: 0; top: 18%; height: 30%; width: 100%; display: block; }
+.status {
+  position: absolute; left: 0; right: 0; top: 54%;
+  text-align: center; font-family: var(--font-display); font-size: 17px;
+  color: var(--muted); padding-inline: 20px;
+  transition: color .3s;
+}
+.stage[data-mode="locked"] .status, .stage[data-mode="ending"] .status { color: var(--seal); }
+.rec {
+  position: absolute; left: 50%; bottom: 13%;
+  width: 88px; height: 88px; margin-left: -44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: grab;
+  touch-action: none;
+  display: grid; place-items: center;
+  transition: background .25s, box-shadow .25s;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--seal) 40%, transparent);
+}
+.rec::after { content: ""; width: 26px; height: 26px; border-radius: 50%; background: var(--seal); transition: transform .25s, border-radius .25s; }
+.rec.snap { transition: transform .35s cubic-bezier(.2,1.4,.4,1), background .25s, box-shadow .25s; }
+.stage[data-mode="hold"] .rec, .stage[data-mode="locked"] .rec, .stage[data-mode="ending"] .rec { background: var(--seal); animation: breathe 2.4s ease-in-out infinite; }
+.stage[data-mode="hold"] .rec::after, .stage[data-mode="locked"] .rec::after, .stage[data-mode="ending"] .rec::after { background: var(--paper); transform: scale(.7); }
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--seal) 45%, transparent); }
+  50% { box-shadow: 0 0 0 22px color-mix(in srgb, var(--seal) 0%, transparent); }
+}
+.toast {
+  position: absolute; left: 0; right: 0; top: 40%;
+  text-align: center; font-family: var(--font-brush); font-size: 44px; color: var(--seal);
+  opacity: 0; pointer-events: none;
+}
+.toast.show { animation: leave 2.2s ease forwards; }
+@keyframes leave { 0% { opacity: 0; transform: translateY(8px); } 20% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }
+.traces {
+  position: absolute; left: 0; right: 0; bottom: 4%;
+  display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; padding-inline: 24px;
+  min-height: 12px;
+}
+.traces i { width: 6px; height: 6px; border-radius: 50%; background: var(--seal); opacity: .75; animation: drop .5s ease both; }
+@keyframes drop { from { transform: translateY(-30px); opacity: 0; } }
+.proto-steps { display: grid; gap: 20px; }
+.proto-steps .step { padding-left: 16px; border-left: 2px solid var(--line); transition: border-color .3s; }
+.proto-steps .step.on { border-color: var(--seal); }
+.proto-steps .step b { font-family: var(--font-display); font-size: 18px; display: block; }
+.controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.chip {
+  font: 500 13px var(--font-body);
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+}
+.chip:hover { border-color: var(--ink); }
+.note { font-size: 13px; color: var(--muted); }
+
+/* ---------- 签署 ---------- */
+.ritual { list-style: none; padding: 0; margin: 32px 0 0; counter-reset: r; display: grid; gap: 0; }
+.ritual li {
+  counter-increment: r;
+  display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 20px;
+  padding-block: 22px; border-top: 1px solid var(--line);
+}
+.ritual li::before {
+  content: counter(r, cjk-ideographic);
+  font-family: var(--font-display); font-weight: 900; font-size: 28px; color: var(--muted);
+  line-height: 1.2;
+}
+.ritual li.once::before { color: var(--seal); }
+.ritual .say {
+  font-family: var(--font-display); font-size: 18px; line-height: 1.8;
+  margin: 8px 0 0; padding: 14px 18px; background: var(--surface); border-radius: 10px;
+}
+.ritual .say span { display: block; }
+.ritual .once-mark {
+  display: inline-block; margin-left: 10px; vertical-align: 3px;
+  font: 700 12px var(--font-body); color: var(--seal); border: 1.5px solid var(--seal);
+  padding: 0 6px; border-radius: 4px; transform: rotate(-4deg);
+}
+
+/* ---------- 存储 ---------- */
+.stack { display: grid; gap: 10px; margin-top: 28px; position: relative; }
+.layer {
+  display: grid; grid-template-columns: minmax(0, 7em) minmax(0, 1fr) auto; gap: 6px 20px; align-items: center;
+  padding: 16px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  position: relative;
+}
+.layer + .layer::before {
+  content: ""; position: absolute; left: 3.5em; top: -11px; width: 2px; height: 10px; background: var(--line);
+}
+.layer .k { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
+.layer .v b { font-family: var(--font-display); font-size: 17px; }
+.layer .v div { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.cost { font: 500 12px var(--font-body); padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.cost.free { color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 50%, transparent); }
+.cost.paid { color: var(--warn); border: 1px solid color-mix(in srgb, var(--warn) 50%, transparent); }
+.layer.chain { border-style: dashed; }
+.packet {
+  position: absolute; left: calc(3.5em - 4px); top: 0; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--seal); opacity: 0;
+}
+
+.chart-box { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 15em); gap: 28px; align-items: start; }
+.chart-scroll { overflow-x: auto; }
+#costChart { width: 100%; min-width: 520px; height: auto; display: block; }
+.legend { display: grid; gap: 12px; font-size: 14px; }
+.legend .row { display: flex; gap: 10px; align-items: baseline; }
+.sw { flex: none; width: 14px; height: 10px; border-radius: 2px; transform: translateY(1px); }
+.bignum { font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+.payers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 32px; }
+.payer { padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; }
+.payer.lean { border-color: var(--seal); }
+.payer .tag { font: 500 12px var(--font-body); color: var(--seal); }
+.payer p { font-size: 14px; color: var(--muted); margin: 6px 0 0; }
+
+/* ---------- 前车之鉴 ---------- */
+.tl-scroll { overflow-x: auto; margin-top: 28px; }
+#timeline { width: 100%; min-width: 680px; height: auto; display: block; }
+.status-key { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+.versus { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; margin-top: 28px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.versus > div { padding: 24px; }
+.versus > div + div { border-left: 1px solid var(--line); background: var(--surface); }
+.versus h3 { font-size: 22px; }
+.versus ul { margin: 10px 0 0; padding-left: 1.2em; color: var(--muted); font-size: 15px; }
+
+.finds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+.find { padding: 20px; border-top: 2px solid var(--ink); }
+.find h3 { font-size: 18px; }
+.find p { font-size: 14px; color: var(--muted); margin: 0; }
+
+/* ---------- 待定 / 日记 ---------- */
+.open-q { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
+.open-q li { display: flex; gap: 12px; align-items: baseline; }
+.open-q li::before { content: ""; flex: none; width: 10px; height: 10px; border: 1.5px solid var(--muted); border-radius: 2px; transform: translateY(1px); }
+.open-q li.done::before { background: var(--ok); border-color: var(--ok); }
+.open-q li.done { color: var(--muted); }
+
+.journal { display: grid; gap: 28px; margin-top: 28px; }
+.entry { border-left: 2px solid var(--seal); padding-left: 20px; }
+.entry .date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; }
+.entry ul { padding-left: 1.2em; margin: 8px 0; }
+.entry li { margin-bottom: 6px; }
+.entry .idea { background: var(--surface); border-radius: 10px; padding: 14px 18px; font-family: var(--font-display); }
+.empty {
+  border: 1px dashed var(--line); border-radius: 14px; padding: 32px 24px; text-align: center; color: var(--muted);
+}
+.empty b { display: block; font-family: var(--font-display); font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+
+footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
+
+.sound-toggle {
+  position: fixed; z-index: 6;
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  font: 500 13px var(--font-body);
+  background: var(--ink); color: var(--paper); border: 0; border-radius: 999px; padding: 8px 14px; cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .origin, .proto, .chart-box, .versus { grid-template-columns: minmax(0, 1fr); }
+  .versus > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .creed li { grid-template-columns: minmax(0, 1fr); }
+  .finds { grid-template-columns: minmax(0, 1fr); }
+  .payers { grid-template-columns: minmax(0, 1fr); }
+  .layer { grid-template-columns: minmax(0, 1fr) auto; }
+  .layer .k { grid-column: 1 / -1; }
+  section { padding-block: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+
+<header class="hero">
+  <canvas id="heroWave" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="meta"><span>IDEA · 001</span><span>始于 2026-10-10</span><span>状态：构想中</span></div>
+    <div class="hero-title">
+      <h1>留声</h1>
+      <div class="seal" aria-label="印章：只此一次">只此<br>一次</div>
+    </div>
+    <p class="lede">给每个人一个说完就走的地方。</p>
+    <p class="sub">任何人都可以进来，按住一个按钮，想到什么说什么，不念稿。说完就走，不留多余的痕迹。声音原样保存，到了你定下的那一天，才会被打开。</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="章节">
+  <div class="wrap">
+    <a href="#origin">起因</a>
+    <a href="#creed">态度</a>
+    <a href="#try">试一试</a>
+    <a href="#sign">签署</a>
+    <a href="#store">怎么存</a>
+    <a href="#others">别人怎么做</a>
+    <a href="#open">待定</a>
+    <a href="#journal">每日灵感</a>
+  </div>
+</nav>
+
+<main>
+  <section id="origin">
+    <div class="wrap">
+      <p class="eyebrow">起因</p>
+      <h2>为什么是声音</h2>
+      <div class="origin">
+        <div class="prose">
+          <p>起因是家人离去后的失落，还有《流浪地球》里关于数字生命的启发。</p>
+          <p>一开始什么都想留，但量太大。只留文字又不对：文字从敲出来的那一刻起，就已经被修饰过了。</p>
+          <p>所以留<strong>声音</strong>，而且是想到什么说什么的声音。停顿、口误、语气、背景里的电视声，都是文字留不住的东西。</p>
+        </div>
+        <blockquote>
+          他的声音所传达的爱，和"他就在这儿"的感觉，比任何家庭录像都多。
+          <footer>Susan Stamberg，美国电台主持人，第一次在家庭录音里听到已故父亲的声音后</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="creed">
+    <div class="wrap">
+      <p class="eyebrow">设计态度</p>
+      <h2>说了就说了</h2>
+      <p class="prose muted">这个项目要的是更真实的状态。下面每一条都已经定下，后面所有设计都照着它来。</p>
+      <ul class="creed">
+        <li><strong>没有撤销，没有后悔</strong><span>说错了可以接着补一句。反反复复、举棋不定，本身就是这个人的性格。</span></li>
+        <li><strong>不显示时长</strong><span>看着秒数跳，人会紧张，就不是想到什么说什么了。</span></li>
+        <li><strong>原样保存，不做处理</strong><span>不降噪，不剪辑，连手机默认的"自动美化"也要关掉。</span></li>
+        <li><strong>录音不会自动结束</strong><span>用户迟早会回来处理，除非他已经不在了。</span></li>
+        <li><strong>只给一次机会</strong><span>解锁日期、谁能听，签署时选定，之后不能修改。就当是临死前的最后一次机会。</span></li>
+        <li><strong>真实优先</strong><span>给人留下真实的机会，不是让人粉饰。不欢迎朝三暮四的用户。</span></li>
+        <li><strong>真假不管</strong><span>假的就是假的，我们负不了这个责任。不喜欢这种方式，就不要用。</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="try">
+    <div class="wrap">
+      <p class="eyebrow">交互原型 · 可以上手</p>
+      <h2>只有一个按钮</h2>
+      <div class="proto">
+        <div class="proto-steps">
+          <div class="step" id="s-hold"><b>短说：按住说话，松手留下</b><span class="muted">按住按钮开始，说完松手，声音就记录下来了。按下不到半秒就松手，算误触。</span></div>
+          <div class="step" id="s-lock"><b>长说：按下一拖，解放双手</b><span class="muted">按住按钮，顺势往左或往右拖到边缘，进入锁定录音。不用再按着，一直说到不想说为止。</span></div>
+          <div class="step" id="s-end"><b>结束：同样的一拖</b><span class="muted">锁定状态下，再按住按钮往边上一拖，就留下了。没有"放弃"，没有时长，留下之后也没有下一步。</span></div>
+          <p class="note">这是演示，不会真的录音，也不会上传任何东西。点右下角可以开关音效。</p>
+        </div>
+        <div class="stage" id="stage" data-mode="idle">
+          <div class="edge left"></div>
+          <div class="edge right"></div>
+          <canvas id="protoWave" aria-hidden="true"></canvas>
+          <div class="status" id="status" aria-live="polite">按住说话</div>
+          <div class="toast" id="toast">已留下</div>
+          <button class="rec" id="rec" aria-label="录音按钮：按住说话，往边上拖进入锁定录音"></button>
+          <div class="traces" id="traces" aria-label="留下的声音"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sign">
+    <div class="wrap">
+      <p class="eyebrow">注册 · 草稿</p>
+      <h2>一次签署</h2>
+      <p class="prose muted">注册就是签协议，每个身份只有一次机会。不填表，不打字，和录音一样只用声音和一个按钮。用声纹认人，但只做提示，由用户自己确认。</p>
+      <ol class="ritual">
+        <li><div><h3>开场</h3>
+          <div class="say"><span>这里只做一件事：留下你的声音。</span><span>不是念稿，不是表演，是你想到什么就说什么。</span><span>说错了就接着说，犹豫了就让它犹豫。那也是你。</span></div></div></li>
+        <li><div><h3>规矩</h3><p class="muted">一条一条出现，不能快速跳过。</p>
+          <div class="say"><span>说了就说了。没有撤销，没有删除。</span><span>不会告诉你说了多久。</span><span>每个人只有一次签署的机会。</span><span>我们不问你是谁，但会认得你的声音。</span><span>我们不对声音的真假负责。</span></div></div></li>
+        <li class="once"><div><h3>定下解锁日期和谁能听<span class="once-mark">不可修改</span></h3>
+          <div class="say"><span>你留下的声音，在这一天之前，谁都听不到，包括你自己。</span><span>这个日期定下之后，不能再改。</span><span>谁能听，也只能选这一次。</span><span>就当这是临死前的最后一次机会。</span></div>
+          <p class="muted" style="margin-top:10px">谁能听：所有人 / 只有拿到钥匙的人 / 谁都不给，就这么放着。</p></div></li>
+        <li><div><h3>开口签署</h3><p class="muted">不给稿子，只问一个问题，比如"你为什么来这里？"按住按钮回答。这段话同时是签名、声纹样本，也是留下的第一段声音。</p></div></li>
+        <li><div><h3>声音像来过的人时</h3>
+          <div class="say"><span>你的声音，我们好像听过。</span><span>如果你来过，我们会把两次合在一起；如果你不愿意，就不能再留下了。</span><span>如果你没来过，就继续吧。</span></div></div></li>
+        <li><div><h3>完成</h3><p class="muted">没有欢迎页，没有教程，直接回到那一个按钮。</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="store">
+    <div class="wrap">
+      <p class="eyebrow">存储 · 草案</p>
+      <h2>全部用现成的开源项目</h2>
+      <p class="prose muted">区块链上只放指纹，不放录音。录音加密后放在分布式存储里。每一层都有现成的开源实现，不用自己造轮子。</p>
+      <div class="stack" id="stack">
+        <div class="packet" id="packet" aria-hidden="true"></div>
+        <div class="layer"><span class="k">录音</span><div class="v"><b>用户的手机</b><div>边录边分段保存，先落在本地，停在哪儿就保住到哪儿。手机上始终留一份副本。</div></div><span class="cost free">不花钱</span></div>
+        <div class="layer"><span class="k">加密</span><div class="v"><b>drand tlock 时间锁</b><div>按签署时定下的日期加密。到期前谁都打不开，平台和本人也不行。"不能改"靠数学，不靠平台守规矩。</div></div><span class="cost free">不花钱</span></div>
+        <div class="layer"><span class="k">日常存储</span><div class="v"><b>IPFS + IPFS Cluster</b><div>项目跑几个节点，认同这件事的志愿者也能加入一起存，像 BT 做种。</div></div><span class="cost paid">服务器和硬盘</span></div>
+        <div class="layer"><span class="k">永久存储</span><div class="v"><b>Arweave</b><div>一次付费，永久保存，作为兜底。价格跟币价走。</div></div><span class="cost paid">按量付费</span></div>
+        <div class="layer chain"><span class="k">存在证明</span><div class="v"><b>OpenTimestamps → 比特币</b><div>只把录音的指纹锚定到链上，证明"这段声音在这一刻存在过、没被改过"，不暴露任何内容。很多人的指纹合成一笔交易。</div></div><span class="cost free">不花钱</span></div>
+      </div>
+
+      <div class="chart-box">
+        <div>
+          <h3>一个人一辈子要花多少</h3>
+          <p class="muted" style="font-size:14px">假设每周说 1 小时，原始录音约 10MB/小时，全部放进 Arweave。阴影是币价波动的范围（每 GB 5 到 20 美元）。</p>
+          <div class="chart-scroll"><svg id="costChart" viewBox="0 0 620 300" role="img" aria-label="30 年累计永久存储费用估算"></svg></div>
+        </div>
+        <div class="legend">
+          <div><div class="bignum">约 $156</div><div class="muted" style="font-size:13px">30 年，约 15.6GB，按每 GB 10 美元</div></div>
+          <div class="row"><span class="sw" style="background:var(--seal)"></span><span>每 GB 10 美元</span></div>
+          <div class="row"><span class="sw" style="background:color-mix(in srgb, var(--seal) 18%, transparent)"></span><span>每 GB 5 到 20 美元</span></div>
+          <p class="note">粗算，不是报价。手机揣在口袋里录一整天的话，衣服摩擦声压缩不掉，会实实在在地占空间。</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:40px">这笔钱谁来出：还在想</h3>
+      <div class="payers">
+        <div class="payer"><b>签署时一次性付费</b><p>和"一次签署"的分量相称，也能挡住随手反复注册的人。但有了门槛，也留下了支付记录。</p></div>
+        <div class="payer"><b>捐赠</b><p>认同这件事的人捐钱，统一付永久存储的费用。</p></div>
+        <div class="payer"><b>只靠志愿者节点</b><p>完全免费，但能存多久取决于社区能活多久。</p></div>
+        <div class="payer lean"><span class="tag">Claude 的倾向</span><b>组合</b><p>所有录音先免费存在 IPFS 上，想要"永远"的人再付一次钱进 Arweave。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="others">
+    <div class="wrap">
+      <p class="eyebrow">调研 · 2026-10</p>
+      <h2>做这件事的，大多没活下来</h2>
+      <p class="prose muted">把同类项目按时间排开。公司关了，声音就跟着悬了。这正是坚持去中心化和开源的理由。</p>
+      <div class="tl-scroll"><svg id="timeline" viewBox="0 0 900 420" role="img" aria-label="同类项目时间线"></svg></div>
+      <div class="status-key">
+        <span><span class="sw" style="display:inline-block;background:var(--ok)"></span> 还在</span>
+        <span><span class="sw" style="display:inline-block;background:var(--dead)"></span> 已关闭或停用</span>
+        <span><span class="sw" style="display:inline-block;background:var(--warn)"></span> 现状未确认</span>
+        <span>"约"表示起始年份为估计</span>
+      </div>
+
+      <div class="versus">
+        <div>
+          <p class="eyebrow" style="color:var(--muted)">别人</p>
+          <h3>复活一个人</h3>
+          <ul>
+            <li>Eternos：让人朗读指定句子来克隆声音，据报道要 1.5 万美元</li>
+            <li>Project December：用聊天记录训练机器人，"复活"去世的未婚妻</li>
+            <li>超级头脑：一分钟视频，一天做出逝者数字人</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow">留声</p>
+          <h3>只保存真的声音</h3>
+          <ul>
+            <li>不生成逝者没说过的话</li>
+            <li>不念稿，不朗读指定句子</li>
+            <li>原始声音留着，将来怎么用，交给未来的人决定</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="finds">
+        <div class="find"><h3>盐矿里的陶瓷小牌</h3><p>Memory of Mankind 把文字烧在陶瓷上，藏进 2000 米深的盐矿，再把刻着地图的小牌交给 50 个人传下去。保存只是一半，未来怎么找到它是另一半。</p></div>
+        <div class="find"><h3>一段偶然的语音留言</h3><p>有人存着母亲唯一的一段语音留言，运营商规定 30 天不重新保存就删除，录音就这么没了。留声想把偶然变成有意。</p></div>
+        <div class="find"><h3>零件都是现成的</h3><p>Sarcophagus 用以太坊加 Arweave 做死人开关，LastSignal 在浏览器里加密，drand 有现成的时间锁网页。可以直接拿来拼。</p></div>
+      </div>
+      <p class="note" style="margin-top:18px">完整调研和来源见仓库里的 <span class="mono">ideas/voice-legacy-research.md</span>。</p>
+    </div>
+  </section>
+
+  <section id="open">
+    <div class="wrap">
+      <p class="eyebrow">清单</p>
+      <h2>还没定的</h2>
+      <ul class="open-q">
+        <li>存储费谁来出</li>
+        <li>换手机、丢手机之后，还能接着留吗</li>
+        <li>合并账户时，两个解锁日期怎么处理（按"只给一次"，倾向以第一次签署为准）</li>
+        <li>签署流程的文案打磨</li>
+        <li>未来的人怎么找到这些声音</li>
+        <li class="done">录音时的交互</li>
+        <li class="done">用什么认出同一个人：声纹，只做提示</li>
+        <li class="done">解锁日期和谁能听：签署时一次选定</li>
+        <li class="done">背景里的各种声音：原样保存</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="journal">
+    <div class="wrap">
+      <p class="eyebrow">每日灵感 · 北京时间 6:52 出发</p>
+      <h2>Claude 每天出去转一圈</h2>
+      <p class="prose muted">每天一个主题，按星期轮换：极客社区、开源项目、艺术与科幻、口述与习俗、技术细节、伦理法规、新闻。找到的东西记在这里。</p>
+      <div class="journal" id="journalList"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="end">
+  <div class="wrap">留声 · idear 想法收集箱 · 和 Claude 一起想</div>
+</footer>
+
+<button class="sound-toggle" id="soundToggle" aria-pressed="true">音效：开</button>
+
+<script type="application/json" id="journal-data">[{"date": "2026-10-16", "theme": "技术细节", "finds": [{"name": "Infura 关停 IPFS 服务", "text": "Infura 在 2026 年 8 月 3 日停止新上传和固定（pin），8 月 15 日关闭 IPFS API 和专用网关；内容的 CID 不变，但所有写死了 Infura 地址的应用要自己改。留声的\"日常存储\"如果依赖某家托管 pin 服务，就会遇到同样的事。具体关停后的现状未逐条确认。", "url": "https://filecoin.io/blog/Infuras-IPFS-Service-is-Shutting-Down-August-15-2026"}, {"name": "Arweave 的\"永久\"是怎么算出来的", "text": "一次付费，大部分进入\"捐赠基金\"，再慢慢付给矿工；定价按约 200 年的存储成本计算，前提是存储成本每年至少下降 0.5%，降得更快则存得更久。所以\"永久\"是一个经济假设，不是物理保证，而且付费是用 AR 币计价，法币价格会随币价大幅波动（ArDrive 文章里出现过每 GB 3–8 美元和 30–45 美元两种量级，文章未标日期）。可以直接补充 voice-legacy.md 里\"每 GB 约 10 美元\"的粗算的不确定性。", "url": "https://permaweb-journal.ar.io/reference/storage-endowment.html"}, {"name": "美国国会图书馆偏好无损的 Broadcast WAVE", "text": "馆里对音频的首选归档格式是封装 LPCM 的 Broadcast WAVE；我没能确认它对 Opus / FLAC 的态度（页面抓取失败，现状未确认）。这和留声草案里\"Opus 一小时约 10MB\"的体积估算有一个需要意识到的差别：机构做长期保存时偏向无损，体积大得多。", "url": "https://www.loc.gov/preservation/digital/formats/fdd/fdd000357.shtml"}, {"name": "档案界的做法：校验和 + 定期巡检 + 多地副本", "text": "NDSA 的指引强调，只记录指纹不够，要按计划定期核对，发现损坏能用另一份副本修复；存储层级从\"两份不在同一处\"到\"三份以上、处在不同灾害风险的地点\"。格式过时是另一个独立问题，指纹管不了。", "url": "https://www.digitalpreservation.gov/ndsa/working_groups/documents/NDSA-Fixity-Guidance-Report-final100214.pdf"}, {"name": "互联网档案馆、史密森尼已把音频放上 Filecoin / IPFS", "text": "公共领域有声书、Bell 的数字化录音等。说明机构层面的\"去中心化保存\"已有先例，可以作为将来\"交给公共机构兜底\"的参照。", "url": "https://blog.archive.org/tag/filecoin/"}], "idea": "钥匙卡 / 寻回线索里写\"内容指纹\"，不写\"网址\"。 Infura 的例子说明，服务会关，地址会失效，只有按内容寻址的 CID 不变。托付模式生成的钥匙（或\"陶瓷小牌\"式的短码）可以包含：录音的内容哈希 + 解锁日期 + 一句\"用任何 IPFS / Arweave 工具按这个哈希去找\"，不绑定任何一家网关或 pin 服务。再配合档案界的\"定期巡检\"：志愿者节点定期核对每段录音的哈希，坏了从别的副本修复，这样\"像做种一样\"的社区存储才有说得出口的可靠性。这些都不改变已定的立场，只是让寻回不依赖留声自己活着。", "more": ["LoC 对 Opus / FLAC 的明确态度，以及\"原样\"录下来的 Opus 码流，是否需要同时在手机本地留一份无损（只是技术核实，不是改立场）", "IPFS Cluster / Kubo 志愿者节点的实际巡检、自动修复机制，和 Arweave 当前实时报价接口（gateway 的 price endpoint）"]}]</script>
+
+<script>
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  /* ---------- 音效 ---------- */
+  let ac = null, muted = false;
+  try { muted = localStorage.getItem('liusheng-muted') === '1'; } catch (e) {}
+  const toggle = document.getElementById('soundToggle');
+  function paintToggle() { toggle.textContent = muted ? '音效：关' : '音效：开'; toggle.setAttribute('aria-pressed', String(!muted)); }
+  paintToggle();
+  toggle.addEventListener('click', () => {
+    muted = !muted; paintToggle();
+    try { localStorage.setItem('liusheng-muted', muted ? '1' : '0'); } catch (e) {}
+    if (!muted) { ensureAudio(); sfx('press'); }
+  });
+  function ensureAudio() {
+    if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } }
+    if (ac && ac.state === 'suspended') ac.resume();
+  }
+  function tone(freq, at, dur, type, gain) {
+    if (!ac || muted) return;
+    const t = ac.currentTime + at;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(gain || 0.07, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ac.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function sfx(kind) {
+    if (kind === 'press') tone(196, 0, 0.14, 'triangle', 0.08);
+    if (kind === 'lock') { tone(523.25, 0, 0.16, 'sine', 0.06); tone(783.99, 0.09, 0.3, 'sine', 0.06); }
+    if (kind === 'save') { tone(659.25, 0, 0.5, 'sine', 0.06); tone(523.25, 0.14, 0.6, 'sine', 0.05); tone(392, 0.28, 1.1, 'sine', 0.05); }
+    if (kind === 'miss') tone(140, 0, 0.12, 'square', 0.025);
+  }
+  function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
+
+  /* ---------- 首屏波形 ---------- */
+  const hero = document.getElementById('heroWave');
+  const hctx = hero.getContext('2d');
+  function sizeCanvas(c) {
+    const r = c.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = Math.max(1, Math.round(r.width * d)); c.height = Math.max(1, Math.round(r.height * d));
+    return d;
+  }
+  let hd = sizeCanvas(hero);
+  window.addEventListener('resize', () => { hd = sizeCanvas(hero); pd = sizeCanvas(pw); });
+  function drawHero(t) {
+    const w = hero.width, h = hero.height;
+    hctx.clearRect(0, 0, w, h);
+    const lines = [
+      { c: css('--line'), a: 1, amp: 0.10, f: 1.3, s: 0.00020, y: 0.62 },
+      { c: css('--muted'), a: 0.25, amp: 0.07, f: 2.1, s: 0.00031, y: 0.66 },
+      { c: css('--seal'), a: 0.35, amp: 0.05, f: 3.2, s: 0.00045, y: 0.70 }
+    ];
+    for (const L of lines) {
+      hctx.beginPath();
+      hctx.globalAlpha = L.a;
+      hctx.strokeStyle = L.c;
+      hctx.lineWidth = 1.5 * hd;
+      for (let x = 0; x <= w; x += 4 * hd) {
+        const p = x / w;
+        const env = Math.sin(Math.PI * p);
+        const y = h * L.y + Math.sin(p * Math.PI * 2 * L.f + t * L.s * 6.28) * h * L.amp * env
+                + Math.sin(p * 23 + t * L.s * 9) * h * 0.012 * env;
+        x === 0 ? hctx.moveTo(x, y) : hctx.lineTo(x, y);
+      }
+      hctx.stroke();
+    }
+    hctx.globalAlpha = 1;
+  }
+
+  /* ---------- 原型 ---------- */
+  const stage = document.getElementById('stage');
+  const btn = document.getElementById('rec');
+  const statusEl = document.getElementById('status');
+  const toast = document.getElementById('toast');
+  const traces = document.getElementById('traces');
+  const pw = document.getElementById('protoWave');
+  const pctx = pw.getContext('2d');
+  let pd = sizeCanvas(pw);
+  let mode = 'idle', t0 = 0, startX = 0, level = 0;
+  const bars = new Array(48).fill(0);
+
+  const steps = { hold: 's-hold', locked: 's-lock', ending: 's-end' };
+  function setMode(m, text) {
+    mode = m;
+    stage.dataset.mode = m;
+    statusEl.textContent = text || ({ idle: '按住说话', hold: '在听……往边上拖，可以不用按着', locked: '一直在听。说完了，再按住往边上一拖', ending: '拖到边上，就留下了' })[m];
+    document.querySelectorAll('.proto-steps .step').forEach(s => s.classList.remove('on'));
+    if (steps[m]) document.getElementById(steps[m]).classList.add('on');
+  }
+  function nearEdge(x) {
+    const r = stage.getBoundingClientRect(), e = r.width * 0.15;
+    return x < r.left + e || x > r.right - e;
+  }
+  function moveKnob(dx) {
+    const r = stage.getBoundingClientRect(), lim = r.width / 2 - 30;
+    const d = Math.max(-lim, Math.min(lim, dx));
+    btn.style.transform = 'translateX(' + d + 'px)';
+  }
+  function snapBack() {
+    btn.classList.add('snap'); btn.style.transform = '';
+    setTimeout(() => btn.classList.remove('snap'), 380);
+  }
+  function save() {
+    snapBack();
+    setMode('idle');
+    sfx('save'); buzz([10, 40, 10]);
+    toast.classList.remove('show'); void toast.offsetWidth; toast.classList.add('show');
+    const dot = document.createElement('i');
+    traces.appendChild(dot);
+    if (traces.children.length > 30) traces.removeChild(traces.firstChild);
+  }
+  btn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    try { btn.setPointerCapture(e.pointerId); } catch (err) {}
+    ensureAudio();
+    startX = e.clientX;
+    btn.classList.remove('snap');
+    if (mode === 'idle') { t0 = performance.now(); setMode('hold'); sfx('press'); buzz(8); }
+    else if (mode === 'locked') { setMode('ending'); sfx('press'); }
+  });
+  btn.addEventListener('pointermove', (e) => {
+    if (mode !== 'hold' && mode !== 'ending') return;
+    moveKnob(e.clientX - startX);
+    if (!nearEdge(e.clientX)) return;
+    if (mode === 'hold') { snapBack(); setMode('locked'); sfx('lock'); buzz(30); }
+    else save();
+  });
+  function release() {
+    if (mode === 'hold') {
+      if (performance.now() - t0 < 500) { snapBack(); setMode('idle', '太短了，算误触'); sfx('miss'); setTimeout(() => { if (mode === 'idle') setMode('idle'); }, 1400); }
+      else save();
+    } else if (mode === 'ending') { snapBack(); setMode('locked'); }
+  }
+  btn.addEventListener('pointerup', release);
+  btn.addEventListener('pointercancel', release);
+  btn.addEventListener('keydown', (e) => {
+    if (e.key !== ' ' && e.key !== 'Enter') return;
+    e.preventDefault(); ensureAudio();
+    if (mode === 'idle') { setMode('locked'); sfx('lock'); }
+    else if (mode === 'locked') save();
+  });
+
+  function drawProto(t) {
+    const w = pw.width, h = pw.height;
+    pctx.clearRect(0, 0, w, h);
+    const live = mode !== 'idle';
+    level += ((live ? 1 : 0) - level) * 0.08;
+    const n = bars.length, gap = w / n;
+    for (let i = 0; i < n; i++) {
+      const speech = Math.abs(Math.sin(t * 0.004 + i * 0.5) * Math.sin(t * 0.0013 + i * 0.17));
+      const target = level * (0.15 + 0.85 * speech * (0.6 + 0.4 * Math.random()));
+      bars[i] += (target - bars[i]) * 0.25;
+      const bh = Math.max(2 * pd, bars[i] * h * 0.9);
+      pctx.fillStyle = live ? css('--seal') : css('--line');
+      pctx.globalAlpha = live ? 0.85 : 1;
+      pctx.fillRect(i * gap + gap * 0.25, (h - bh) / 2, gap * 0.5, bh);
+    }
+    pctx.globalAlpha = 1;
+  }
+
+  /* ---------- 存储层动画 ---------- */
+  const packet = document.getElementById('packet');
+  const stack = document.getElementById('stack');
+  function animatePacket() {
+    if (reduce || !packet.animate) return;
+    const layers = stack.querySelectorAll('.layer');
+    const frames = [];
+    layers.forEach((L, i) => {
+      const y = L.offsetTop + L.offsetHeight / 2 - 5;
+      frames.push({ transform: 'translateY(' + y + 'px)', opacity: i === 0 ? 0 : 1, offset: i / (layers.length - 1) });
+    });
+    frames[frames.length - 1].opacity = 0;
+    packet.animate(frames, { duration: 5200, iterations: Infinity, easing: 'ease-in-out' });
+  }
+
+  /* ---------- 费用图 ---------- */
+  function drawCost() {
+    const svg = document.getElementById('costChart');
+    const W = 620, H = 300, m = { l: 56, r: 24, t: 20, b: 44 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const gbPerYear = 52 * 10 / 1000;
+    const x = (yr) => m.l + (yr / 30) * iw;
+    const yMax = 350;
+    const y = (usd) => m.t + ih - (usd / yMax) * ih;
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, attrs, text) => { const n = document.createElementNS(NS, tag); for (const k in attrs) { if (k === 'fill' || k === 'stroke' || k === 'font-family') n.style.setProperty(k, attrs[k]); else n.setAttribute(k, attrs[k]); } if (text != null) n.textContent = text; svg.appendChild(n); return n; };
+    svg.innerHTML = '';
+    for (const v of [0, 100, 200, 300]) {
+      el('line', { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: 'var(--line)', 'stroke-width': 1 });
+      el('text', { x: m.l - 10, y: y(v) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, '$' + v);
+    }
+    for (const yr of [0, 5, 10, 15, 20, 25, 30]) {
+      el('text', { x: x(yr), y: H - m.b + 22, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, yr + '年');
+    }
+    let band = '', hi = [], line = '';
+    for (let yr = 0; yr <= 30; yr++) {
+      const gb = gbPerYear * yr;
+      band += (yr ? 'L' : 'M') + x(yr) + ' ' + y(gb * 5) + ' ';
+      hi.push(x(yr) + ' ' + y(gb * 20));
+      line += (yr ? 'L' : 'M') + x(yr) + ' ' + y(gb * 10) + ' ';
+    }
+    band += 'L' + hi.reverse().join(' L') + ' Z';
+    el('path', { d: band, fill: 'var(--seal)', 'fill-opacity': 0.14, stroke: 'none' });
+    const p = el('path', { d: line, fill: 'none', stroke: 'var(--seal)', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+    const endGb = gbPerYear * 30;
+    el('circle', { cx: x(30), cy: y(endGb * 10), r: 5, fill: 'var(--seal)' });
+    el('text', { x: x(30) - 10, y: y(endGb * 20) - 8, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, '$' + Math.round(endGb * 20));
+    el('text', { x: x(30) - 10, y: y(endGb * 10) - 10, 'text-anchor': 'end', fill: 'var(--ink)', 'font-size': 13, 'font-weight': 700, 'font-family': 'var(--font-mono)' }, '$' + Math.round(endGb * 10) + ' · ' + endGb.toFixed(1) + 'GB');
+    el('text', { x: x(30) - 10, y: y(endGb * 5) + 18, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, '$' + Math.round(endGb * 5));
+    if (!reduce && p.getTotalLength) {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L; p.style.strokeDashoffset = 0;
+      p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 1600, easing: 'ease-out' });
+    }
+  }
+
+  /* ---------- 时间线 ---------- */
+  function drawTimeline() {
+    const svg = document.getElementById('timeline');
+    const data = [
+      { n: 'KEO 卫星', s: 1994, e: 2025, st: 'dead', note: '30 年没发射，宣布关闭' },
+      { n: 'Earth Capsule', s: 2000, e: null, st: 'unk', note: '1 美元存 50 年', approx: true },
+      { n: 'StoryCorps', s: 2003, e: null, st: 'ok', note: '录音进美国国会图书馆' },
+      { n: 'LifeNaut', s: 2007, e: null, st: 'unk', note: '为"数字意识"免费存档' },
+      { n: 'Memory of Mankind', s: 2012, e: null, st: 'ok', note: '盐矿里的陶瓷档案' },
+      { n: 'StoryFile', s: 2017, e: 2024, st: 'dead', note: '申请破产保护', approx: true },
+      { n: 'HereAfter AI', s: 2019, e: 2026, st: 'dead', note: '宣布关闭', approx: true },
+      { n: 'Sarcophagus', s: 2020, e: null, st: 'unk', note: '去中心化死人开关' },
+      { n: 'Project December', s: 2020, e: 2021, st: 'dead', note: 'GPT-3 版本停用', approx: true },
+      { n: '超级头脑', s: 2023, e: null, st: 'ok', note: 'AI 复刻逝者' }
+    ];
+    const W = 900, rowH = 36, m = { l: 150, r: 190, t: 30 }, H = m.t + data.length * rowH + 20;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const y0 = 1990, y1 = 2026;
+    const x = (yr) => m.l + ((yr - y0) / (y1 - y0)) * (W - m.l - m.r);
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, attrs, text) => { const n = document.createElementNS(NS, tag); for (const k in attrs) { if (k === 'fill' || k === 'stroke' || k === 'font-family') n.style.setProperty(k, attrs[k]); else n.setAttribute(k, attrs[k]); } if (text != null) n.textContent = text; svg.appendChild(n); return n; };
+    svg.innerHTML = '';
+    for (let yr = 1990; yr <= 2025; yr += 5) {
+      el('line', { x1: x(yr), x2: x(yr), y1: m.t - 8, y2: H - 10, stroke: 'var(--line)', 'stroke-width': 1 });
+      el('text', { x: x(yr), y: m.t - 14, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, yr);
+    }
+    el('line', { x1: x(2026), x2: x(2026), y1: m.t - 8, y2: H - 10, stroke: 'var(--seal)', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+    el('text', { x: x(2026), y: m.t - 14, 'text-anchor': 'middle', fill: 'var(--seal)', 'font-size': 12, 'font-family': 'var(--font-mono)' }, '今天');
+    const col = { ok: 'var(--ok)', dead: 'var(--dead)', unk: 'var(--warn)' };
+    data.forEach((d, i) => {
+      const cy = m.t + i * rowH + rowH / 2;
+      el('text', { x: m.l - 12, y: cy + 4, 'text-anchor': 'end', fill: 'var(--ink)', 'font-size': 13, 'font-family': 'var(--font-body)' }, d.n);
+      const end = d.e || 2026;
+      const bar = el('rect', { x: x(d.s), y: cy - 5, width: Math.max(4, x(end) - x(d.s)), height: 10, rx: 5, fill: col[d.st], 'fill-opacity': d.st === 'unk' ? 0.55 : 0.9 });
+      if (d.st === 'unk') bar.setAttribute('stroke-dasharray', '4 3');
+      if (d.st === 'dead') el('text', { x: x(end) + 2, y: cy + 4, fill: 'var(--dead)', 'font-size': 13, 'font-family': 'var(--font-body)' }, '×');
+      el('text', { x: x(2026) + 12, y: cy + 4, fill: 'var(--muted)', 'font-size': 12, 'font-family': 'var(--font-body)' }, (d.approx ? '约' : '') + d.s + ' · ' + d.note);
+      if (!reduce && bar.animate) bar.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 900, delay: i * 70, easing: 'ease-out', fill: 'backwards' });
+      bar.style.transformOrigin = x(d.s) + 'px ' + cy + 'px';
+    });
+  }
+
+  /* ---------- 日记 ---------- */
+  function renderJournal() {
+    const list = document.getElementById('journalList');
+    let entries = [];
+    try { entries = JSON.parse(document.getElementById('journal-data').textContent || '[]'); } catch (e) { entries = []; }
+    if (!entries.length) {
+      list.innerHTML = '<div class="empty"><b>第一篇正在路上</b>每天北京时间 6:52 出发，回来后记在这里。最新的在最上面。</div>';
+      return;
+    }
+    const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    list.innerHTML = entries.map(en => {
+      const finds = (en.finds || []).map(f => '<li><b>' + esc(f.name) + '</b>：' + esc(f.text) + (f.url ? ' <a href="' + esc(f.url) + '" target="_blank" rel="noopener">来源</a>' : '') + '</li>').join('');
+      const more = (en.more || []).map(m => '<li>' + esc(m) + '</li>').join('');
+      return '<article class="entry"><div class="date">' + esc(en.date) + ' · ' + esc(en.theme) + '</div>' +
+        (finds ? '<ul>' + finds + '</ul>' : '') +
+        (en.idea ? '<div class="idea">' + esc(en.idea) + '</div>' : '') +
+        (more ? '<p class="muted" style="margin:10px 0 0;font-size:14px">可以继续挖：</p><ul class="muted" style="font-size:14px">' + more + '</ul>' : '') +
+        '</article>';
+    }).join('');
+  }
+
+  /* ---------- 启动 ---------- */
+  setMode('idle');
+  drawCost();
+  drawTimeline();
+  renderJournal();
+  requestAnimationFrame(() => animatePacket());
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', () => { drawCost(); drawTimeline(); });
+
+  let last = 0;
+  function loop(t) {
+    if (!reduce || t - last > 1000) { drawHero(t); last = t; }
+    drawProto(t);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
