@@ -5,6 +5,23 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-10-18 · 同类产品新闻
+
+### 发现
+- **Storyworth 推出 Story Calls：打电话就能讲故事**：老牌家族回忆录服务 Storyworth 加了电话功能，讲述人直接打电话回答，连座机都行，通话逐字转写。门槛降到了"会接电话就行"，是给不用智能手机的老人准备的。我没能打开原文，推出时间未确认。[The Next Web](https://thenextweb.com/news/storyworth-voice-tools-family-memory)
+- **Heritage Whisper 上线：AI 采访员替你问奶奶**：2026 年 4 月在美国上线，创始人没能在祖母去世前听她讲完故事，于是做了一个叫 Pearl 的 AI 采访员，现场提问，录音加文字稿，最后攒成一本数字书。[Barchart](https://www.barchart.com/story/news/1185876/heritage-whisper-launches-platform-to-help-families-capture-stories-before-its-too-late)
+- **语音回忆录 App 扎堆，方向几乎一致**：Sommos 用 AI 分析录音、把亲戚之间的回忆串起来；Heirloom4Life 让家人事后"向录过音的人提新问题"；ToldByMe 卖的是一次买断的"AI 润色"。整个市场在往"AI 提问、转文字、润色、成书、能对话"走，正好和留声的"不念稿、不处理、不生成"相反。[Technical.ly](https://technical.ly/entrepreneurship/sommos-ai-family-archive/)
+- **《纽约客》：父亲还在世，女儿先做了他的"死亡机器人"**：2026 年 7 月的长篇报道，意大利一位艺术家在 77 岁父亲衰弱时，用回忆、照片等资料做了一个可对话的 AI 父亲，花费和订一个流媒体会员差不多。文章问的是：这样的复制品到底能给人什么。只读到转载的开头。[Bioethics.com 转载](https://bioethics.com/?p=103407)
+- **又一个前车之鉴：Eternime 2018 年关闭**：早年的"数字永生"项目，因为找不到足够的用户而关闭。加上 HereAfter、StoryFile，这条赛道上倒下的名单又长了一截。[Ginger Liu](https://gingerliu.substack.com/p/technology-that-can-communicate-with)
+
+### 今天的一个想法
+**给不用智能手机的人一条"电话版"的留声：拿起电话就是按下按钮，挂断就是放手。** Storyworth 的电话功能说明，最需要留下声音的那群老人，往往卡在"装 App"这一步。留声的手势本来就和打电话同构：拿起听筒开始说，说完挂断，声音就留下了，没有时长，也没有"重来"。签署也可以在电话里完成，问一句"你为什么来这里"，回答就是签名和声纹样本。别人都在用 AI 采访员引导、润色、成书，留声反过来，只给一条安静的线路，接通之后不提示、不打断。这不改变任何已定的立场，只是多一个入口。
+
+### 可以继续挖
+- 电话入口的技术和成本：开源的电话交换软件（如 Asterisk、FreeSWITCH）能不能直接录下原始通话音质，国内运营电话号码需要什么资质
+- Storyworth Story Calls 的具体推出时间和老人的实际使用反馈
+
+
 ## 2026-10-17 · 伦理法规
 
 ### 发现
