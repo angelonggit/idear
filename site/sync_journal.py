@@ -20,7 +20,7 @@ def parse(md):
         finds = []
         for name, rest in re.findall(r"^- \*\*(.+?)\*\*[：:](.+)$", body, re.M):
             urls = re.findall(r"\]\((https?://[^)]+)\)", rest)
-            text = re.sub(r"\s*(·\s*)?\[[^\]]+\]\([^)]+\)", "", rest).strip().rstrip("·").strip()
+            text = re.sub(r"\s*(·\s*)?\[[^\]]+\]\([^)]+\)", "", rest).strip().rstrip("·").strip().replace("**", "").replace("`", "")
             finds.append({"name": name, "text": text, "url": urls[0] if urls else ""})
         entries.append({
             "date": head.group(1),

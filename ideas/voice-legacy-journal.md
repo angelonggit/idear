@@ -5,6 +5,21 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-10-20 · 开源项目
+
+### 发现
+- **Nonograph：发出去就收不回的匿名发布**：一个可以自己部署的匿名文字发布工具，没有账号，不做统计，写完拿到一个链接；**发布之后不能修改、不能删除**，项目把发布当成"单行门"，理由是去掉事后自我审查的诱惑。Rust 写的，Unlicense 协议。它是文字版的"说了就说了"，而且是匿名的。信息都来自 OpenAlternative 的收录页，项目原始仓库没能打开核对。[OpenAlternative](https://openalternative.co/nonograph)
+- **Trillian Tessera 和 Sigstore Rekor：只能追加的公开账本**：这是证书透明度（CT）那一套技术。条目一旦写入就改不了，任何第三方都能用密码学方法验证整本账没被动过手脚。Google 团队新出的 Tessera 把账本存成一块块静态"瓦片"，可以放在普通文件系统或对象存储上，便于缓存和镜像，运营成本比老版 Trillian 低很多。值得注意的是 Sigstore 自己承认：账本服务器的时钟"不能被外部验证"，所以要另外配可信时间戳。[Transparency.dev](https://blog.transparency.dev/announcing-the-alpha-release-of-trillian-tessera) · [Sigstore 安全模型](https://docs.sigstore.dev/security)
+- **mat2：只清文件外壳，不碰内容**：开源的元数据清理工具，支持 FLAC、Ogg、WAV 等音频格式，删掉文件里附带的设备、软件、时间等标签。项目自己说得很清楚：它**只去元数据，不匿名化内容本身**。对留声来说正好：声音一点不动，只把文件外壳上可能指向某个人、某台手机的信息去掉。具体对每种音频格式清得多干净，搜索结果没说，现状未确认。[Debian 软件包](https://packages.debian.org/nl/buster/mat2)
+- **浏览器里"关掉美化"并不可靠**：留声文档里写了要把 `echoCancellation`、`noiseSuppression`、`autoGainControl` 设为 false。WebKit 的 bug 记录显示，2017 年 Safari 曾直接无视这些设置（后来标记已修复）；2024 年又有一个仍未关闭的 bug：关掉回声消除后，iOS 和 macOS 的 Safari 会把单声道录成只有左声道有声音的立体声。Chrome 团队另写过一篇怎么关掉**硬件**降噪的文章，说明有些美化发生在浏览器之下。结论：网页版录不到真正的"原样"，要用 `track.getSettings()` 实测。[WebKit 281978](https://bugs.webkit.org/show_bug.cgi?id=281978) · [WebKit 179411](https://bugs.webkit.org/show_bug.cgi?id=179411) · [Chrome 博客](https://developer.chrome.com/blog/disabling-hardware-noise-suppression/)
+
+### 今天的一个想法
+昨天想的那面"存在过"的墙，可以直接用透明度日志搭，而且用不着信任留声自己。 每留下一段声音，就往一本只能追加的公开账本（Tessera）里写一行：这段录音的指纹。账本定期把自己的"总指纹"交给 OpenTimestamps 锚定到比特币，正好补上 Sigstore 承认的那个缺口：账本自己的时钟不可信，比特币的可信。账本是一块块静态文件，认同这件事的人可以整本镜像，像做种一样，留声哪天关了，墙还在，谁都能验证"某时某刻有一段声音写进来过，之后没人改过"。墙上没有名字、没有内容，进墙之前再用 mat2 这类工具把文件外壳上的设备信息去掉，声音本身一个字节都不动。Nonograph 说明"发出去就收不回"在开源世界里已经有人这样做，而且有人用。
+
+### 可以继续挖
+- Tessera 的 GA 版本和实际部署的例子（规模、成本），以及透明度日志和 OpenTimestamps 怎么组合，有没有现成做法
+- 原生 App（iOS 的 AVAudioSession 的 measurement 模式、安卓的 UNPROCESSED 音源）能不能拿到真正未经处理的麦克风信号
+
 ## 2026-10-19 · 极客社区
 
 ### 发现
