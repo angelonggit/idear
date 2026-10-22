@@ -5,6 +5,22 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-10-23 · 技术细节
+
+### 发现
+- **安卓的 UNPROCESSED 音源：要先问一句"你真有吗"**：Android 7.0 起有一个"未处理"麦克风音源。兼容性定义文档（CDD）要求，声明支持它的设备在这条路径上**不能有**自动增益、高通滤波、回声消除，只允许调整音量大小，并且必须通过 `PROPERTY_SUPPORT_AUDIO_SOURCE_UNPROCESSED` 告诉 App。不支持的设备会悄悄退回默认音源，所以 App 不先查这个属性，就不知道自己录到的是不是原样。[Android 文档](https://developer.android.com/reference/android/media/MediaRecorder.AudioSource) · [CDD 5.11](https://os.unplugged.com/werunplugged/unplugged-vendor/raw/branch/main/compatibility/cdd/5_multimedia/5_11_unprocessed-audio.md)
+- **iOS 的"测量模式"：苹果自己说的最少处理**：`AVAudioSession` 的 measurement 模式按苹果文档是"尽量减少系统对输入输出信号的处理"，开发者论坛里说它会关掉自动增益和高通滤波。代价是录出来音量很小。具体去掉了哪些处理，苹果没讲清楚，开发者问过也没得到明确回答。[Apple 论坛](https://developer.apple.com/forums/thread/695892) · [JUCE 论坛](https://forum.juce.com/t/disable-agc-and-highpass-filter-on-ios/12812)
+- **Oblivious HTTP（RFC 9458）：让服务器不知道上传的人是谁**：2024 年的 IETF 标准。手机把加密好的请求交给一个"中继"，中继知道你的 IP 但看不到内容，再转给服务器；服务器看得到内容，但只看到中继的地址。前提是中继和服务器**由不同的人运营、不串通**。这样留声的服务器连 IP 都拿不到。[RFC 9458](https://datatracker.ietf.org/doc/rfc9458)
+- **Privacy Pass（RFC 9576）：不认人也能防刷**：最初是为了在不识别用户的情况下拦住 Tor 来的滥用流量。客户端先领一批匿名令牌，用的时候服务器只能验证"这是一张有效、没用过的令牌"，认不出是谁领的。另有一份草案做"按时间段限量"的令牌。留声没有账号，用它可以挡住机器批量灌录音，又不知道谁是谁。限量令牌草案目前是否已成 RFC，现状未确认。[RFC 9576](https://www.rfc-editor.org/rfc/rfc9576.html)
+- **drand 的时间锁：网络关了会怎样**：drand 自己的文档写明：如果 League of Entropy 解散，成员会删掉密钥，此后才到期的密文就打不开了，除非将来量子计算机能破解；它用的算法本身也不抗量子。quicknet 目前由十几家机构的二十多个节点运行。[drand 文档](https://docs.drand.love/docs/timelock-encryption/)
+
+### 今天的一个想法
+"我们不知道你是谁"可以从手机一路做到服务器，每一层都有现成的标准。 手机上，安卓先查 UNPROCESSED 属性、iOS 用测量模式，录到尽可能原样的声音；上传时走 Oblivious HTTP，中继交给认同这件事的另一方（比如做种的志愿者）来跑，服务器连 IP 都看不到；防刷用 Privacy Pass 令牌，只认"这是一张合法的票"，不认人。这样"不知道是谁"就不只是一句承诺，而是服务器从结构上拿不到。另外 drand 那条值得记下：时间锁依赖一个网络一直活着，它要是没了，锁住的声音就再也打不开。对"定时公开"来说这是风险；对"只证明存在"来说，结果其实一样，都是"没有人能听到"。选哪种仍然留给你，这里只是把各自依赖什么摆清楚。
+
+### 可以继续挖
+- 国内能不能找到愿意跑 OHTTP 中继的独立一方，以及国内应用商店对"不收集 IP"的说法怎么看
+- 安卓主流机型（华为、小米、OPPO 等）有多少真正声明支持 UNPROCESSED，有没有人做过统计
+
 ## 2026-10-22 · 口述传统与哀伤心理学
 
 ### 发现
