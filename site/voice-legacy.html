@@ -294,7 +294,7 @@ p { margin: 0 0 14px; }
 .sw { flex: none; width: 14px; height: 10px; border-radius: 2px; transform: translateY(1px); }
 .bignum { font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
 
-.payers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 32px; }
+.payers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
 .payer { padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; }
 .payer.lean { border-color: var(--seal); }
 .payer .tag { font: 500 12px var(--font-body); color: var(--seal); }
@@ -316,6 +316,37 @@ p { margin: 0 0 14px; }
 .find h3 { font-size: 18px; }
 .find p { font-size: 14px; color: var(--muted); margin: 0; }
 
+/* ---------- 只证明存在 / 墙 ---------- */
+.exist .prose { font-size: 18px; }
+.exist-line {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center;
+  margin: 28px 0 10px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+}
+.exist-line .t, .exist-line .fp { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.exist-line .fp { color: var(--seal); }
+.shape { width: 100%; height: 40px; display: block; }
+.gains { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.gains li { padding-top: 14px; border-top: 2px solid var(--ink); display: grid; gap: 4px; }
+.gains b { font-family: var(--font-display); font-size: 19px; }
+.gains span { color: var(--muted); font-size: 14px; }
+.fpnote {
+  position: absolute; left: 0; right: 0; top: 49%;
+  text-align: center; font-size: 12px; color: var(--seal); opacity: 0; transition: opacity .6s;
+}
+.fpnote.show { opacity: 1; }
+.wall { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 0; }
+.wall li {
+  display: grid; grid-template-columns: 9.5em minmax(0, 1fr) 11em; gap: 18px; align-items: center;
+  padding-block: 10px; border-top: 1px solid var(--line);
+}
+.wall li:last-child { border-bottom: 1px solid var(--line); }
+.wall .t { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wall .fp { font-family: var(--font-mono); font-size: 12px; color: var(--muted); text-align: right; }
+.wall li.mine .fp, .wall li.mine .t { color: var(--seal); }
+.wall li.mine { animation: drop .6s ease both; }
+.wall .tag { font: 500 11px var(--font-body); color: var(--seal); margin-left: 6px; }
+.wall svg { width: 100%; height: 28px; display: block; }
+
 /* ---------- 待定 / 日记 ---------- */
 .open-q { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
 .open-q li { display: flex; gap: 12px; align-items: baseline; }
@@ -324,7 +355,7 @@ p { margin: 0 0 14px; }
 .open-q li.done { color: var(--muted); }
 
 .journal { display: grid; gap: 28px; margin-top: 28px; }
-.entry { border-left: 2px solid var(--seal); padding-left: 20px; }
+.entry { border-left: 2px solid var(--seal); padding-left: 20px; min-width: 0; overflow-wrap: anywhere; }
 .entry .date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; }
 .entry ul { padding-left: 1.2em; margin: 8px 0; }
 .entry li { margin-bottom: 6px; }
@@ -350,6 +381,10 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
   .creed li { grid-template-columns: minmax(0, 1fr); }
   .finds { grid-template-columns: minmax(0, 1fr); }
   .payers { grid-template-columns: minmax(0, 1fr); }
+  .gains { grid-template-columns: minmax(0, 1fr); }
+  .exist-line { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .wall li { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 12px; }
+  .wall li svg { grid-column: 1 / -1; grid-row: 2; }
   .layer { grid-template-columns: minmax(0, 1fr) auto; }
   .layer .k { grid-column: 1 / -1; }
   section { padding-block: 56px; }
@@ -363,13 +398,13 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
 <header class="hero">
   <canvas id="heroWave" aria-hidden="true"></canvas>
   <div class="wrap">
-    <div class="meta"><span>IDEA · 001</span><span>始于 2026-10-10</span><span>状态：构想中</span></div>
+    <div class="meta"><span>IDEA · 001</span><span>始于 2026-10-10</span><span>状态：构想中 · 10-23 方向收窄</span></div>
     <div class="hero-title">
       <h1>留声</h1>
       <div class="seal" aria-label="印章：只此一次">只此<br>一次</div>
     </div>
     <p class="lede">给每个人一个说完就走的地方。</p>
-    <p class="sub">任何人都可以进来，按住一个按钮，想到什么说什么，不念稿。说完就走，不留多余的痕迹。声音原样保存，到了你定下的那一天，才会被打开。</p>
+    <p class="sub">任何人都可以进来，按住一个按钮，想到什么说什么。说完，这段声音就被锁上，谁都听不到，包括你自己。世界只会知道：某年某月某日，有一个声音存在过。它属于谁，不重要，也没有人知道。</p>
   </div>
 </header>
 
@@ -377,8 +412,10 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
   <div class="wrap">
     <a href="#origin">起因</a>
     <a href="#creed">态度</a>
+    <a href="#exist">只证明存在</a>
     <a href="#try">试一试</a>
-    <a href="#sign">签署</a>
+    <a href="#wall">存在过的墙</a>
+    <a href="#sign">进来之前</a>
     <a href="#store">怎么存</a>
     <a href="#others">别人怎么做</a>
     <a href="#open">待定</a>
@@ -396,12 +433,32 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
           <p>起因是家人离去后的失落，还有《流浪地球》里关于数字生命的启发。</p>
           <p>一开始什么都想留，但量太大。只留文字又不对：文字从敲出来的那一刻起，就已经被修饰过了。</p>
           <p>所以留<strong>声音</strong>，而且是想到什么说什么的声音。停顿、口误、语气、背景里的电视声，都是文字留不住的东西。</p>
+          <p>后来，为了避开政策和法律上的纠纷，目的收窄了：不是为了让别人记住你，而是让你留下一道声音的痕迹，让世界知道曾经有这个声音存在过。</p>
         </div>
         <blockquote>
           他的声音所传达的爱，和"他就在这儿"的感觉，比任何家庭录像都多。
           <footer>Susan Stamberg，美国电台主持人，第一次在家庭录音里听到已故父亲的声音后</footer>
         </blockquote>
       </div>
+    </div>
+  </section>
+
+  <section id="exist" class="exist">
+    <div class="wrap">
+      <p class="eyebrow">方向 · 2026-10-23 定下</p>
+      <h2>只证明存在</h2>
+      <p class="prose">声音在你的手机上被锁上，钥匙当场销毁，没有交给任何人，包括你自己。从此没有人能听到它。世界能看到的只有一行记录：<strong>某时某刻，这里留下过一个声音。</strong></p>
+      <div class="exist-line" aria-label="一行存在记录的样子">
+        <span class="mono t">2026-10-23 07:41</span>
+        <svg class="shape" viewBox="0 0 240 40" aria-hidden="true" id="heroShape"></svg>
+        <span class="mono fp">指纹 9c1e4a07…b83d2f</span>
+      </div>
+      <p class="note">轮廓统一拉成一样宽，看不出说了多久，也还原不出一个字。</p>
+      <ul class="gains">
+        <li><b>不认人</b><span>没有名字、账号、声纹。属于谁，没人知道，也不需要知道。</span></li>
+        <li><b>没人能听</b><span>平台也听不到，所以谈不上审核和传播。</span></li>
+        <li><b>几乎不花钱</b><span>公开的只是一行记录，锚定到比特币链上免费。</span></li>
+      </ul>
     </div>
   </section>
 
@@ -415,8 +472,9 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
         <li><strong>不显示时长</strong><span>看着秒数跳，人会紧张，就不是想到什么说什么了。</span></li>
         <li><strong>原样保存，不做处理</strong><span>不降噪，不剪辑，连手机默认的"自动美化"也要关掉。</span></li>
         <li><strong>录音不会自动结束</strong><span>用户迟早会回来处理，除非他已经不在了。</span></li>
-        <li><strong>只给一次机会</strong><span>解锁日期、谁能听，签署时选定，之后不能修改。就当是临死前的最后一次机会。</span></li>
-        <li><strong>真实优先</strong><span>给人留下真实的机会，不是让人粉饰。不欢迎朝三暮四的用户。</span></li>
+        <li><strong>只给一次机会</strong><span>留下的声音，谁都听不到，包括你自己。就当是临死前的最后一次机会。</span></li>
+        <li><strong>不认人</strong><span>不要名字，不要账号，不认声纹。这个声音属于谁，不重要，也不要知道。</span></li>
+        <li><strong>真实优先</strong><span>给人留下真实的机会，不是让人粉饰。没有人在听，人才说得最真。</span></li>
         <li><strong>真假不管</strong><span>假的就是假的，我们负不了这个责任。不喜欢这种方式，就不要用。</span></li>
       </ul>
     </div>
@@ -430,7 +488,7 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
         <div class="proto-steps">
           <div class="step" id="s-hold"><b>短说：按住说话，松手留下</b><span class="muted">按住按钮开始，说完松手，声音就记录下来了。按下不到半秒就松手，算误触。</span></div>
           <div class="step" id="s-lock"><b>长说：按下一拖，解放双手</b><span class="muted">按住按钮，顺势往左或往右拖到边缘，进入锁定录音。不用再按着，一直说到不想说为止。</span></div>
-          <div class="step" id="s-end"><b>结束：同样的一拖</b><span class="muted">锁定状态下，再按住按钮往边上一拖，就留下了。没有"放弃"，没有时长，留下之后也没有下一步。</span></div>
+          <div class="step" id="s-end"><b>结束：同样的一拖</b><span class="muted">锁定状态下，再按住按钮往边上一拖，就留下了。声音当场锁上，屏幕上只剩它的指纹，下面"存在过的墙"上会多一行。</span></div>
           <p class="note">这是演示，不会真的录音，也不会上传任何东西。点右下角可以开关音效。</p>
         </div>
         <div class="stage" id="stage" data-mode="idle">
@@ -439,6 +497,7 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
           <canvas id="protoWave" aria-hidden="true"></canvas>
           <div class="status" id="status" aria-live="polite">按住说话</div>
           <div class="toast" id="toast">已留下</div>
+          <div class="fpnote mono" id="fpnote" aria-live="polite"></div>
           <button class="rec" id="rec" aria-label="录音按钮：按住说话，往边上拖进入锁定录音"></button>
           <div class="traces" id="traces" aria-label="留下的声音"></div>
         </div>
@@ -446,22 +505,25 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
     </div>
   </section>
 
+  <section id="wall">
+    <div class="wrap">
+      <p class="eyebrow">公开的只有这些</p>
+      <h2>存在过的墙</h2>
+      <p class="prose muted">每留下一段声音，就往一本只能追加、谁都改不了的公开账本里写一行：时间、轮廓、指纹。账本定期锚定到比特币链上。下面是示例；你在上面原型里留下的，会出现在最上面，只在你自己的浏览器里。</p>
+      <ol class="wall" id="wallList" aria-label="存在记录"></ol>
+    </div>
+  </section>
+
   <section id="sign">
     <div class="wrap">
-      <p class="eyebrow">注册 · 草稿</p>
-      <h2>一次签署</h2>
-      <p class="prose muted">注册就是签协议，每个身份只有一次机会。不填表，不打字，和录音一样只用声音和一个按钮。用声纹认人，但只做提示，由用户自己确认。</p>
+      <p class="eyebrow">第一次打开 · 草稿</p>
+      <h2>进来之前</h2>
+      <p class="prose muted">原来的"一次签署"认人、定日期、选谁能听，收窄后都不需要了。第一次打开时只说几句话，然后就是那一个按钮。</p>
       <ol class="ritual">
         <li><div><h3>开场</h3>
           <div class="say"><span>这里只做一件事：留下你的声音。</span><span>不是念稿，不是表演，是你想到什么就说什么。</span><span>说错了就接着说，犹豫了就让它犹豫。那也是你。</span></div></div></li>
-        <li><div><h3>规矩</h3><p class="muted">一条一条出现，不能快速跳过。</p>
-          <div class="say"><span>说了就说了。没有撤销，没有删除。</span><span>不会告诉你说了多久。</span><span>每个人只有一次签署的机会。</span><span>我们不问你是谁，但会认得你的声音。</span><span>我们不对声音的真假负责。</span></div></div></li>
-        <li class="once"><div><h3>定下解锁日期和谁能听<span class="once-mark">不可修改</span></h3>
-          <div class="say"><span>你留下的声音，在这一天之前，谁都听不到，包括你自己。</span><span>这个日期定下之后，不能再改。</span><span>谁能听，也只能选这一次。</span><span>就当这是临死前的最后一次机会。</span></div>
-          <p class="muted" style="margin-top:10px">谁能听：所有人 / 只有拿到钥匙的人 / 谁都不给，就这么放着。</p></div></li>
-        <li><div><h3>开口签署</h3><p class="muted">不给稿子，只问一个问题，比如"你为什么来这里？"按住按钮回答。这段话同时是签名、声纹样本，也是留下的第一段声音。</p></div></li>
-        <li><div><h3>声音像来过的人时</h3>
-          <div class="say"><span>你的声音，我们好像听过。</span><span>如果你来过，我们会把两次合在一起；如果你不愿意，就不能再留下了。</span><span>如果你没来过，就继续吧。</span></div></div></li>
+        <li class="once"><div><h3>规矩<span class="once-mark">只说一次</span></h3>
+          <div class="say"><span>说了就说了。没有撤销，没有删除。</span><span>不会告诉你说了多久。</span><span>说完，声音就锁上了，谁都听不到，包括你自己。</span><span>世界只会知道，它存在过。</span><span>我们不知道你是谁，也不想知道。</span></div></div></li>
         <li><div><h3>完成</h3><p class="muted">没有欢迎页，没有教程，直接回到那一个按钮。</p></div></li>
       </ol>
     </div>
@@ -469,21 +531,29 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
 
   <section id="store">
     <div class="wrap">
-      <p class="eyebrow">存储 · 草案</p>
-      <h2>全部用现成的开源项目</h2>
-      <p class="prose muted">区块链上只放指纹，不放录音。录音加密后放在分布式存储里。每一层都有现成的开源实现，不用自己造轮子。</p>
+      <p class="eyebrow">怎么做到 · 草案</p>
+      <h2>从手机到链上，一路不知道你是谁</h2>
+      <p class="prose muted">每一层都有现成的开源实现或公开标准，多数是每日巡游找来的。</p>
       <div class="stack" id="stack">
         <div class="packet" id="packet" aria-hidden="true"></div>
-        <div class="layer"><span class="k">录音</span><div class="v"><b>用户的手机</b><div>边录边分段保存，先落在本地，停在哪儿就保住到哪儿。手机上始终留一份副本。</div></div><span class="cost free">不花钱</span></div>
-        <div class="layer"><span class="k">加密</span><div class="v"><b>drand tlock 时间锁</b><div>按签署时定下的日期加密。到期前谁都打不开，平台和本人也不行。"不能改"靠数学，不靠平台守规矩。</div></div><span class="cost free">不花钱</span></div>
-        <div class="layer"><span class="k">日常存储</span><div class="v"><b>IPFS + IPFS Cluster</b><div>项目跑几个节点，认同这件事的志愿者也能加入一起存，像 BT 做种。</div></div><span class="cost paid">服务器和硬盘</span></div>
-        <div class="layer"><span class="k">永久存储</span><div class="v"><b>Arweave</b><div>一次付费，永久保存，作为兜底。价格跟币价走。</div></div><span class="cost paid">按量付费</span></div>
-        <div class="layer chain"><span class="k">存在证明</span><div class="v"><b>OpenTimestamps → 比特币</b><div>只把录音的指纹锚定到链上，证明"这段声音在这一刻存在过、没被改过"，不暴露任何内容。很多人的指纹合成一笔交易。</div></div><span class="cost free">不花钱</span></div>
+        <div class="layer"><span class="k">录音</span><div class="v"><b>手机，尽量原样</b><div>安卓用"未处理"音源，iOS 用测量模式，绕开系统的自动美化。去掉文件外壳上的设备信息（mat2）。</div></div><span class="cost free">不花钱</span></div>
+        <div class="layer"><span class="k">上锁</span><div class="v"><b>手机上加密，钥匙当场销毁</b><div>随机生成一把钥匙，加密完立刻丢掉，原始录音从手机上删除。从这一刻起，没有人能打开它。</div></div><span class="cost free">不花钱</span></div>
+        <div class="layer"><span class="k">匿名上传</span><div class="v"><b>Oblivious HTTP + Privacy Pass</b><div>经由别人运营的中继转交，服务器看不到你的 IP；用匿名令牌防机器灌录音，也认不出是谁。</div></div><span class="cost free">中继要有人跑</span></div>
+        <div class="layer"><span class="k">记一笔</span><div class="v"><b>只能追加的公开账本（Trillian Tessera）</b><div>写一行：时间、轮廓、指纹。写进去就改不了，任何人都能验证账本没被动过。</div></div><span class="cost paid">一台小服务器</span></div>
+        <div class="layer chain"><span class="k">存在证明</span><div class="v"><b>OpenTimestamps → 比特币</b><div>账本定期把自己的总指纹锚定到比特币链上。账本自己的时钟不可信，比特币的可信。</div></div><span class="cost free">不花钱</span></div>
+      </div>
+
+      <h3 style="margin-top:40px">还没定：锁上的那段声音，要不要也留着</h3>
+      <p class="prose muted" style="font-size:15px">指纹和时间一定会公开留下。至于加密后的声音文件本身，有三种做法。不管哪种，都没人听得到；区别在于"那串锁死的数据"还在不在。</p>
+      <div class="payers">
+        <div class="payer"><b>A. 永久保存</b><p>加密文件放进 Arweave 永久存着。最贴近原来的"原样保存"，但要花钱，按下面的粗算，一个人一辈子一两百美元。存的是一串谁也打不开的数据。</p></div>
+        <div class="payer"><b>B. 只留指纹</b><p>上锁、算出指纹后，加密文件直接丢掉。几乎零成本，但声音的数据就真的没有了，只剩"它存在过"的证明。</p></div>
+        <div class="payer lean"><span class="tag">Claude 的倾向</span><b>C. 让它自然消散</b><p>加密文件交给志愿者节点保存，有人做种就一直在，没人了就慢慢消失，像现实里的声音一样。指纹和时间永远留在链上。免费。</p></div>
       </div>
 
       <div class="chart-box">
         <div>
-          <h3>一个人一辈子要花多少</h3>
+          <h3>如果选 A：一个人一辈子要花多少</h3>
           <p class="muted" style="font-size:14px">假设每周说 1 小时，原始录音约 10MB/小时，全部放进 Arweave。阴影是币价波动的范围（每 GB 5 到 20 美元）。</p>
           <div class="chart-scroll"><svg id="costChart" viewBox="0 0 620 300" role="img" aria-label="30 年累计永久存储费用估算"></svg></div>
         </div>
@@ -491,16 +561,8 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
           <div><div class="bignum">约 $156</div><div class="muted" style="font-size:13px">30 年，约 15.6GB，按每 GB 10 美元</div></div>
           <div class="row"><span class="sw" style="background:var(--seal)"></span><span>每 GB 10 美元</span></div>
           <div class="row"><span class="sw" style="background:color-mix(in srgb, var(--seal) 18%, transparent)"></span><span>每 GB 5 到 20 美元</span></div>
-          <p class="note">粗算，不是报价。手机揣在口袋里录一整天的话，衣服摩擦声压缩不掉，会实实在在地占空间。</p>
+          <p class="note">选 B 或 C，这笔钱基本不用花。</p>
         </div>
-      </div>
-
-      <h3 style="margin-top:40px">这笔钱谁来出：还在想</h3>
-      <div class="payers">
-        <div class="payer"><b>签署时一次性付费</b><p>和"一次签署"的分量相称，也能挡住随手反复注册的人。但有了门槛，也留下了支付记录。</p></div>
-        <div class="payer"><b>捐赠</b><p>认同这件事的人捐钱，统一付永久存储的费用。</p></div>
-        <div class="payer"><b>只靠志愿者节点</b><p>完全免费，但能存多久取决于社区能活多久。</p></div>
-        <div class="payer lean"><span class="tag">Claude 的倾向</span><b>组合</b><p>所有录音先免费存在 IPFS 上，想要"永远"的人再付一次钱进 Arweave。</p></div>
       </div>
     </div>
   </section>
@@ -530,11 +592,11 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
         </div>
         <div>
           <p class="eyebrow">留声</p>
-          <h3>只保存真的声音</h3>
+          <h3>只证明真的声音存在过</h3>
           <ul>
             <li>不生成逝者没说过的话</li>
             <li>不念稿，不朗读指定句子</li>
-            <li>原始声音留着，将来怎么用，交给未来的人决定</li>
+            <li>不认人，没人能听，只证明它存在过</li>
           </ul>
         </div>
       </div>
@@ -553,15 +615,15 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
       <p class="eyebrow">清单</p>
       <h2>还没定的</h2>
       <ul class="open-q">
-        <li>存储费谁来出</li>
-        <li>换手机、丢手机之后，还能接着留吗</li>
-        <li>合并账户时，两个解锁日期怎么处理（按"只给一次"，倾向以第一次签署为准）</li>
-        <li>签署流程的文案打磨</li>
-        <li>未来的人怎么找到这些声音</li>
-        <li class="done">录音时的交互</li>
-        <li class="done">用什么认出同一个人：声纹，只做提示</li>
-        <li class="done">解锁日期和谁能听：签署时一次选定</li>
+        <li>锁上的声音文件要不要留着：A 永久保存 / B 只留指纹 / C 让它自然消散</li>
+        <li>墙上要不要显示轮廓，还是只有时间和指纹</li>
+        <li>匿名上传的中继交给谁来跑</li>
+        <li>国内运营时，公开账本和比特币锚定要不要备案</li>
+        <li>第一次打开时那几句话的文案</li>
+        <li class="done">方向：不认人，只证明存在（10-23）</li>
+        <li class="done">录音时的交互：一个按钮</li>
         <li class="done">背景里的各种声音：原样保存</li>
+        <li class="done">作废：声纹认人、一次签署、解锁日期、谁能听、合并账户</li>
       </ul>
     </div>
   </section>
@@ -668,7 +730,7 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
   const pw = document.getElementById('protoWave');
   const pctx = pw.getContext('2d');
   let pd = sizeCanvas(pw);
-  let mode = 'idle', t0 = 0, startX = 0, level = 0;
+  let mode = 'idle', t0 = 0, startX = 0, level = 0, env = [];
   const bars = new Array(48).fill(0);
 
   const steps = { hold: 's-hold', locked: 's-lock', ending: 's-end' };
@@ -697,6 +759,12 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
     setMode('idle');
     sfx('save'); buzz([10, 40, 10]);
     toast.classList.remove('show'); void toast.offsetWidth; toast.classList.add('show');
+    const fp = randomHex(32);
+    const fpn = document.getElementById('fpnote');
+    fpn.textContent = '指纹 ' + fp.slice(0, 8) + '…' + fp.slice(-6);
+    fpn.classList.add('show');
+    setTimeout(() => fpn.classList.remove('show'), 4200);
+    addWall({ t: new Date(), fp: fp, shape: resample(env.length > 4 ? env : [0.2, 0.5, 0.3], 60), mine: true });
     const dot = document.createElement('i');
     traces.appendChild(dot);
     if (traces.children.length > 30) traces.removeChild(traces.firstChild);
@@ -707,7 +775,7 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
     ensureAudio();
     startX = e.clientX;
     btn.classList.remove('snap');
-    if (mode === 'idle') { t0 = performance.now(); setMode('hold'); sfx('press'); buzz(8); }
+    if (mode === 'idle') { t0 = performance.now(); env = []; setMode('hold'); sfx('press'); buzz(8); }
     else if (mode === 'locked') { setMode('ending'); sfx('press'); }
   });
   btn.addEventListener('pointermove', (e) => {
@@ -728,7 +796,7 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
   btn.addEventListener('keydown', (e) => {
     if (e.key !== ' ' && e.key !== 'Enter') return;
     e.preventDefault(); ensureAudio();
-    if (mode === 'idle') { setMode('locked'); sfx('lock'); }
+    if (mode === 'idle') { env = []; setMode('locked'); sfx('lock'); }
     else if (mode === 'locked') save();
   });
 
@@ -748,7 +816,73 @@ footer.end { padding-block: 48px 64px; color: var(--muted); font-size: 13px; }
       pctx.fillRect(i * gap + gap * 0.25, (h - bh) / 2, gap * 0.5, bh);
     }
     pctx.globalAlpha = 1;
+    if (live) { let sum = 0; for (let i = 0; i < n; i++) sum += bars[i]; env.push(sum / n); }
   }
+
+  /* ---------- 存在过的墙 ---------- */
+  function randomHex(bytes) {
+    const a = new Uint8Array(bytes);
+    try { crypto.getRandomValues(a); } catch (e) { for (let i = 0; i < bytes; i++) a[i] = Math.floor(Math.random() * 256); }
+    return Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function resample(arr, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const a = Math.floor(i * arr.length / n), b = Math.max(a + 1, Math.floor((i + 1) * arr.length / n));
+      let m = 0; for (let j = a; j < b && j < arr.length; j++) m = Math.max(m, arr[j]);
+      out.push(m);
+    }
+    const peak = Math.max(0.05, ...out);
+    return out.map(v => Math.min(1, v / peak));
+  }
+  function shapeSVG(shape, w, h) {
+    const bw = w / shape.length;
+    let r = '';
+    shape.forEach((v, i) => {
+      const bh = Math.max(1.5, v * (h - 4));
+      r += '<rect x="' + (i * bw + bw * 0.2).toFixed(2) + '" y="' + ((h - bh) / 2).toFixed(2) + '" width="' + (bw * 0.6).toFixed(2) + '" height="' + bh.toFixed(2) + '" rx="1"></rect>';
+    });
+    return r;
+  }
+  function seeded(seed) { return () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  function demoShape(seed) {
+    const rnd = seeded(seed), out = [];
+    rnd(); rnd(); rnd();
+    const phase = rnd() * 20, freq = 0.12 + rnd() * 0.3, gate = 0.55 + rnd() * 0.35;
+    for (let i = 0; i < 60; i++) {
+      const pause = Math.sin(i * freq + phase) > gate ? 0.08 : 1;
+      out.push(Math.max(0.05, pause * (0.25 + 0.75 * rnd() * Math.abs(Math.sin(i * 0.37 + phase)))));
+    }
+    return out;
+  }
+  const pad = (x) => String(x).padStart(2, '0');
+  const fmt = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  const wallList = document.getElementById('wallList');
+  function wallRow(e) {
+    const li = document.createElement('li');
+    if (e.mine) li.className = 'mine';
+    const fp = e.fp.slice(0, 8) + '…' + e.fp.slice(-6);
+    li.innerHTML = '<span class="t">' + fmt(e.t) + (e.mine ? '<span class="tag">你刚留下</span>' : '') + '</span>' +
+      '<svg viewBox="0 0 240 28" preserveAspectRatio="none" aria-hidden="true" style="fill:' + (e.mine ? 'var(--seal)' : 'var(--muted)') + '">' + shapeSVG(e.shape, 240, 28) + '</svg>' +
+      '<span class="fp">' + fp + '</span>';
+    return li;
+  }
+  function addWall(e) { wallList.insertBefore(wallRow(e), wallList.firstChild); }
+  (function seedWall() {
+    const base = new Date(2026, 9, 23, 7, 41);
+    const gaps = [0, 23, 71, 180, 412, 433, 905, 1460];
+    gaps.forEach((g, i) => {
+      const t = new Date(base.getTime() - g * 60000);
+      const rnd = seeded(97 + i * 7919);
+      rnd(); rnd(); rnd();
+      let fp = ''; for (let k = 0; k < 64; k++) fp += Math.floor(rnd() * 16).toString(16);
+      wallList.appendChild(wallRow({ t: t, fp: fp, shape: demoShape(11 + i * 37), mine: false }));
+    });
+    const hs = document.getElementById('heroShape');
+    hs.style.fill = 'var(--seal)';
+    hs.setAttribute('preserveAspectRatio', 'none');
+    hs.innerHTML = shapeSVG(demoShape(5), 240, 40);
+  })();
 
   /* ---------- 存储层动画 ---------- */
   const packet = document.getElementById('packet');
