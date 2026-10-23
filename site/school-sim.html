@@ -1,0 +1,276 @@
+<title>校园经营游戏考察</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 布局：一本摊开的作业本。方格纸底，蓝墨水正文，红笔批注只用在"老师的评语"上 */
+:root{
+  --paper:#f7f6f0; --grid:#dfe6ee; --ink:#1f2b45; --ink-soft:#5b6680;
+  --red:#c8342b; --blue:#2c5fa8; --card:#ffffff; --line:#cfd6e2; --hl:#fff1a8;
+  --f-display:"Noto Serif SC","Songti SC",serif;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-hand:"Ma Shan Zheng","Kaiti SC","KaiTi",cursive;
+  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1c2a26; --grid:#24352f; --ink:#e9ece4; --ink-soft:#a9b5ad;
+  --red:#ff8a7a; --blue:#8fb8ff; --card:#22332e; --line:#355047; --hl:#5a5320; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1c2a26; --grid:#24352f; --ink:#e9ece4; --ink-soft:#a9b5ad;
+  --red:#ff8a7a; --blue:#8fb8ff; --card:#22332e; --line:#355047; --hl:#5a5320; color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px}
+.wrap{max-width:960px;margin:0 auto;padding-block:40px 80px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:900}
+h2{font-size:1.6rem;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h2 small{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);letter-spacing:.08em;font-weight:400}
+h3{font-size:1.15rem}
+p{margin:0;max-width:65ch}
+.hand{font-family:var(--f-hand);color:var(--red);font-weight:400}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.12em;color:var(--ink-soft)}
+section{display:flex;flex-direction:column;gap:20px}
+
+/* 封面 */
+.cover{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:3px double var(--ink);padding-bottom:24px}
+.cover .lede{margin-top:12px;color:var(--ink-soft)}
+.stamp{font-family:var(--f-hand);color:var(--red);font-size:2.2rem;border:3px solid var(--red);border-radius:50%;
+  width:120px;height:120px;display:grid;place-items:center;transform:rotate(-12deg);text-align:center;line-height:1.1;opacity:.9}
+@media (max-width:560px){.cover{grid-template-columns:1fr}.stamp{width:96px;height:96px;font-size:1.7rem}}
+
+/* 谱系时间轴 */
+.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative;overflow-x:auto}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:22px;height:2px;background:var(--ink)}
+.tl{display:flex;flex-direction:column;gap:6px;padding-right:12px;min-width:120px}
+.tl .yr{font-family:var(--f-mono);font-weight:600;background:var(--paper);align-self:flex-start;padding-right:8px;position:relative}
+.tl .dot{width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);margin-top:-2px}
+.tl.root .dot{background:var(--red);border-color:var(--red)}
+.tl b{font-family:var(--f-display)}
+.tl span{font-size:.85rem;color:var(--ink-soft);line-height:1.5}
+
+/* 游戏卡片：成绩单 */
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tabs button{font:inherit;font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);
+  padding:4px 14px;border-radius:2px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tabs button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.report{background:var(--card);border:1.5px solid var(--ink);box-shadow:4px 4px 0 var(--line);display:grid;grid-template-columns:220px 1fr}
+.report .side{border-right:1.5px solid var(--ink);padding:20px;display:flex;flex-direction:column;gap:10px}
+.report .side .name{font-family:var(--f-display);font-size:1.5rem;font-weight:900;line-height:1.25}
+.report .side .en{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:.85rem}
+.meta dt{color:var(--ink-soft)} .meta dd{margin:0}
+.report .main{padding:20px 24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.report .one{font-size:1.1rem;font-weight:500}
+.row{display:grid;grid-template-columns:4.5em 1fr;gap:10px}
+.row .k{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;color:var(--ink-soft);padding-top:4px}
+.row.minus .k{color:var(--red)}
+.row.plus .k{color:var(--blue)}
+.comment{font-family:var(--f-hand);color:var(--red);font-size:1.35rem;line-height:1.5;border-top:1px dashed var(--line);padding-top:10px}
+@media (max-width:640px){.report{grid-template-columns:1fr}.report .side{border-right:0;border-bottom:1.5px solid var(--ink)}}
+
+/* 骨架流程 */
+.loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.95rem}
+.loop span{background:var(--card);border:1.5px solid var(--ink);padding:6px 12px}
+.loop i{font-style:normal;color:var(--ink-soft)}
+.loop .back{font-family:var(--f-hand);color:var(--red);font-size:1.2rem}
+
+/* 坐标图 */
+.mapbox{background:var(--card);border:1.5px solid var(--ink);padding:12px;overflow-x:auto}
+.mapbox svg{display:block;width:100%;min-width:520px;height:auto}
+.mapbox text{font-family:var(--f-body);fill:var(--ink)}
+.mapbox .axis{stroke:var(--ink);stroke-width:1.5}
+.mapbox .gridl{stroke:var(--line);stroke-dasharray:3 4}
+.mapbox .lbl{font-size:13px;fill:var(--ink-soft)}
+.mapbox .pt{fill:var(--blue)}
+.mapbox .gap{fill:var(--hl);stroke:var(--red);stroke-dasharray:6 4;stroke-width:2}
+.mapbox .gaptxt{font-family:var(--f-hand);fill:var(--red);font-size:20px}
+.note{font-size:.85rem;color:var(--ink-soft)}
+
+/* 老毛病 */
+.faults{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.fault{border-left:3px solid var(--red);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.fault b{font-family:var(--f-display);font-size:1.05rem}
+.fault span{color:var(--ink-soft);font-size:.93rem}
+
+/* 问题 */
+.qs{display:flex;flex-direction:column;gap:0;background:var(--card);border:1.5px solid var(--ink)}
+.q{display:grid;grid-template-columns:3em 1fr;gap:8px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .n{font-family:var(--f-display);font-size:1.5rem;font-weight:900;color:var(--red)}
+.q b{display:block}
+.q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.q .opts em{font-style:normal;font-size:.85rem;border:1px solid var(--line);padding:1px 10px;border-radius:999px;color:var(--ink-soft)}
+.src{font-size:.82rem;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px}
+.src a{color:var(--blue)}
+mark{background:var(--hl);color:inherit;padding:0 2px}
+@media (prefers-reduced-motion:no-preference){.stamp{animation:thump .5s ease-out .2s both}
+  @keyframes thump{from{transform:rotate(-12deg) scale(1.6)}to{transform:rotate(-12deg) scale(1)}}}
+</style>
+
+<div class="wrap">
+  <header class="cover">
+    <div>
+      <div class="eyebrow">idear · 调研笔记 · 2026.10.23</div>
+      <h1>别人的学校<br>都是怎么盖的</h1>
+      <p class="lede">想做一款像主题公园、疯狂过山车那样的学校模拟经营。先翻了六款同题材游戏的“成绩单”，看清大家共用的骨架、各自加的分，以及集体丢分的地方。</p>
+    </div>
+    <div class="stamp" aria-hidden="true">已阅<br>待议</div>
+  </header>
+
+  <section>
+    <h2>一条家谱 <small>LINEAGE</small></h2>
+    <div class="timeline">
+      <div class="tl root"><div class="yr">1997</div><div class="dot"></div><b>主题医院</b><span>房间 + 员工 + 排队的人 + 黑色幽默。全员的祖宗</span></div>
+      <div class="tl"><div class="yr">2011</div><div class="dot"></div><b>口袋学院</b><span>开罗像素小品，11 年把破学校做到顶尖</span></div>
+      <div class="tl"><div class="yr">2020</div><div class="dot"></div><b>Spellcaster University</b><span>魔法大学，抽卡决定能盖什么</span></div>
+      <div class="tl"><div class="yr">2021</div><div class="dot"></div><b>Academia</b><span>学校版“监狱建筑师”，Paradox 联合发行</span></div>
+      <div class="tl"><div class="yr">2022</div><div class="dot"></div><b>双点校园</b><span>主题医院正统续作的大学版</span></div>
+      <div class="tl"><div class="yr">2023</div><div class="dot"></div><b>学园构想家</b><span>帕斯亚出品，国产，Steam 约 92% 好评</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>六张成绩单 <small>REPORT CARDS</small></h2>
+    <div class="tabs" role="group" aria-label="选择游戏" id="tabs"></div>
+    <article class="report" id="report" aria-live="polite"></article>
+  </section>
+
+  <section>
+    <h2>大家共用的骨架 <small>CORE LOOP</small></h2>
+    <div class="loop">
+      <span>盖教室/设施</span><i>→</i><span>招老师</span><i>→</i><span>招学生（带学费）</span><i>→</i>
+      <span>满足需求：吃、厕所、卫生、娱乐、压力</span><i>→</i><span>学年末考试 / 毕业</span><i>→</i><span>声望 + 钱</span><i>→</i>
+      <span class="back">扩建，再来一年 ↺</span>
+    </div>
+    <p>这一套基本是主题医院把“病人”换成“学生”、把“治愈”换成“及格”。六款游戏都没脱离它，差别在往骨架上贴什么肉。</p>
+  </section>
+
+  <section>
+    <h2>它们站在哪 <small>POSITIONING</small></h2>
+    <div class="mapbox">
+      <svg viewBox="0 0 640 400" role="img" aria-label="六款游戏在基调与关注对象两个维度上的位置">
+        <line class="gridl" x1="320" y1="30" x2="320" y2="350"/>
+        <line class="gridl" x1="70" y1="190" x2="590" y2="190"/>
+        <line class="axis" x1="70" y1="350" x2="590" y2="350"/>
+        <line class="axis" x1="70" y1="30" x2="70" y2="350"/>
+        <text class="lbl" x="70" y="372">写实</text>
+        <text class="lbl" x="590" y="372" text-anchor="end">荒诞</text>
+        <text class="lbl" x="58" y="40" text-anchor="end">个体</text>
+        <text class="lbl" x="58" y="348" text-anchor="end">群体</text>
+        <text class="lbl" x="58" y="62" text-anchor="end" font-size="11">关注学生</text>
+        <text class="lbl" x="58" y="330" text-anchor="end" font-size="11">看数值</text>
+
+        <rect class="gap" x="84" y="40" width="210" height="110" rx="6"/>
+        <text class="gaptxt" x="100" y="80">空白：真实的学校，</text>
+        <text class="gaptxt" x="100" y="108">一个个具体的孩子？</text>
+
+        <circle class="pt" cx="170" cy="300" r="8"/><text x="184" y="305">Academia</text>
+        <circle class="pt" cx="300" cy="225" r="8"/><text x="314" y="230">学园构想家</text>
+        <circle class="pt" cx="370" cy="150" r="8"/><text x="384" y="155">口袋学院</text>
+        <circle class="pt" cx="480" cy="170" r="8"/><text x="420" y="198">双点校园</text>
+        <circle class="pt" cx="545" cy="270" r="8"/><text x="530" y="300" text-anchor="end">Spellcaster</text>
+      </svg>
+    </div>
+    <p class="note">位置是我读完评测后的主观判断，用来讨论，不是测量。左上角那块目前没有人认真做过。</p>
+  </section>
+
+  <section>
+    <h2>集体丢分的地方 <small>COMMON FAULTS</small></h2>
+    <div class="faults">
+      <div class="fault"><b>开局重复，后期发空</b><span>双点校园被骂“每关复制粘贴房间然后快进到学年末”；Academia 也被说后期重复。</span></div>
+      <div class="fault"><b>“上课”本身最抽象</b><span>教学通常就是一个房间加一个进度条。口袋学院的评测直说：很少看到老师真的在讲课。</span></div>
+      <div class="fault"><b>学生只是满意度条</b><span>双点给了交友和恋爱，但学生很少真的“长大”，毕业后也没有回响。</span></div>
+      <div class="fault"><b>故事普遍很薄</b><span>Academia 的评测几乎都提到这点，大家默认经营游戏不需要故事。</span></div>
+      <div class="fault"><b>外部压力只有一两个数</b><span>家长、升学率、教育局、隔壁学校抢生源，多数只是一个声望值。学园构想家的“填鸭还是素质”是少见的例外。</span></div>
+      <div class="fault"><b>界面难找</b><span>学园构想家被吐槽 UI 区分度差，玩到中期还找不到想开的管理面板。经营游戏的老病。</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>回来一起想 <small>FOR DISCUSSION</small></h2>
+    <div class="qs">
+      <div class="q"><div class="n">一</div><div><b>什么学段？</b>学段决定了“学生”是什么样的人，也决定了核心矛盾。
+        <div class="opts"><em>幼儿园</em><em>小学</em><em>初高中</em><em>大学</em><em>补习班</em><em>艺校/体校</em><em>魔法学校</em></div></div></div>
+      <div class="q"><div class="n">二</div><div><b>基调？</b>
+        <div class="opts"><em>写实的中国校园</em><em>荒诞喜剧</em><em>温柔怀旧</em><em>带刺的讽刺</em></div></div></div>
+      <div class="q"><div class="n">三</div><div><b>玩家是谁？</b>不一定非得是校长。
+        <div class="opts"><em>校长</em><em>班主任</em><em>教育局</em><em>民办学校老板</em><em>一名学生</em></div></div></div>
+      <div class="q"><div class="n">四</div><div><b>最爽的是哪一下？</b>
+        <div class="opts"><em>盖出漂亮校园</em><em>看一届学生长大毕业</em><em>在升学率和真教育之间挣扎</em><em>毕业多年后学生回来</em></div></div></div>
+      <div class="q"><div class="n">五</div><div><b>先做多大？</b>
+        <div class="opts"><em>网页小原型</em><em>手机休闲</em><em>Steam 独立游戏</em></div></div></div>
+    </div>
+    <p class="hand" style="font-size:1.4rem">我的初步倾向：左上角那块空白值得打。具体的孩子 + 能看到他们长大 + 毕业之后的回响。等你说说你脑子里的学校是什么样。</p>
+  </section>
+
+  <section class="src">
+    <h3>来源</h3>
+    <a href="https://www.gcores.com/articles/185132">机核：学园构想家主机版</a>
+    <a href="https://www.gcores.com/articles/168873">机核：学园构想家评测</a>
+    <a href="https://www.cgmagonline.com/review/game/lets-school-pc-review/">CGMagazine：Let's School</a>
+    <a href="https://www.pcgamesn.com/two-point-campus/review">PCGamesN：Two Point Campus</a>
+    <a href="https://steamcommunity.com/app/1649080/discussions/0/3435703754820196257">Steam 社区：Two Point Campus 玩家讨论</a>
+    <a href="https://pcgamer.com/sample-the-student-life-in-two-point-campus">PC Gamer：Two Point Campus 的学生生活</a>
+    <a href="https://www.thumbculture.co.uk/academia-school-simulator-review-top-of-its-class">Thumb Culture：Academia</a>
+    <a href="https://virtualseasia.com/review-academia/">Virtuals Easia：Academia</a>
+    <a href="https://www.geekyhobbies.com/academia-school-simulator-indie-game-preview/">Geeky Hobbies：Academia</a>
+    <a href="https://www.pocketgamer.com/pocket-academy/pocket-academy-review/">Pocket Gamer：Pocket Academy</a>
+    <a href="https://www.appspy.com/pocket-academy-review">AppSpy：Pocket Academy</a>
+    <a href="https://www.gamesasylum.com/?p=61047">Games Asylum：Spellcaster University</a>
+    <a href="https://www.keengamer.com/articles/reviews/switch-reviews/spellcaster-university-review-a-bureaucratic-fantasy-in-a-tiny-cursed-box-nintendo-switch">KeenGamer：Spellcaster University</a>
+  </section>
+</div>
+
+<script>
+const games=[
+ {id:"lets",name:"学园构想家",en:"Let's School",yr:"2023",dev:"帕斯亚（重庆）",stage:"中学",look:"低多边形，可盖多层",
+  one:"接手一所破学校，自己决定办成精英填鸭学园还是自由的素质学园。",
+  plus:"教育理念本身是路线选择；考前演讲、学生违纪与异常迹象、老师外出探索触发事件；Steam 约 92% 好评。",
+  minus:"UI 区分度差，中期找不到管理面板；发售时内容偏少，之后补了职员、蓝图、进修。",
+  c:"唯一认真碰“中国式教育”的，可惜只碰了一下。"},
+ {id:"tpc",name:"双点校园",en:"Two Point Campus",yr:"2022",dev:"Two Point Studios / SEGA",stage:"大学",look:"卡通，荒诞",
+  one:"主题医院的大学版，每关一个谐音梗专业，学生越开心学得越好。",
+  plus:"幽默；学生按性格交友、恋爱，关系好成绩就好；社团、派对、学生会让校园热闹。",
+  minus:"每关开局都要重复同样的搭建；玩家吐槽就是复制粘贴房间再快进到学年末；难度曲线怪。",
+  c:"最会逗人笑，但学生毕业那一下没有分量。"},
+ {id:"aca",name:"Academia",en:"Academia: School Simulator",yr:"2021",dev:"Squeaky Wheel / Paradox",stage:"高中",look:"俯视角，像监狱建筑师",
+  one:"偏系统模拟的高中经营，期末及格率和清洁度决定学校档次。",
+  plus:"可以设计校徽、校训；“拨款”像支线任务，兼做新手引导；有沙盒；Steam 特别好评。",
+  minus:"学年短（约 12 天一考），后期重复；故事几乎没有；学生不满会退学或转去对手学校。",
+  c:"骨架最扎实，就是缺了人味。"},
+ {id:"spell",name:"Spellcaster University",en:"Spellcaster University",yr:"2020",dev:"Sneaky Yak",stage:"魔法大学",look:"卡通奇幻",
+  one:"抽卡三选一决定能盖什么，培养学生去对抗黑魔王。",
+  plus:"每局随机，重玩性强；可以派学生下地牢拿卡和法力，学生会死；挑战模式解锁永久稀有卡。",
+  minus:"卡牌作用要很久才搞懂；不能自由摆放；Switch 版画面局促。",
+  c:"用卡牌治“每局都一样”的病，思路值得偷。"},
+ {id:"pa",name:"口袋学院",en:"Pocket Academy",yr:"2011",dev:"开罗 Kairosoft",stage:"高中",look:"像素小格子",
+  one:"11 年时间，把一所落魄学校做成顶尖名校。",
+  plus:"深，重玩价值高；关注具体的人，能看着学校一点点长起来。",
+  minus:"上手难、教程弱、操作别扭；模拟很抽象，老师很少真的在讲课；体验偏短。",
+  c:"小而深。证明了“一群具体的人”比大地图更抓人。"},
+ {id:"th",name:"主题医院",en:"Theme Hospital",yr:"1997",dev:"Bullfrog",stage:"（医院）",look:"等距像素，黑色幽默",
+  one:"不是学校，但上面所有游戏的“建房间、招员工、满足人流”都从这里来。",
+  plus:"荒诞疾病、广播、员工罢工：系统和笑点长在一起。",
+  minus:"关卡制，后期同样重复。",
+  c:"祖师爷。我们要么继承，要么有意识地拧开它。"}
+];
+const tabs=document.getElementById('tabs'),rep=document.getElementById('report');
+function show(id){
+  const g=games.find(x=>x.id===id);
+  tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+  rep.innerHTML=`<div class="side"><div class="name">${g.name}</div><div class="en">${g.en}</div>
+    <dl class="meta"><dt>年份</dt><dd>${g.yr}</dd><dt>开发</dt><dd>${g.dev}</dd><dt>学段</dt><dd>${g.stage}</dd><dt>画面</dt><dd>${g.look}</dd></dl></div>
+    <div class="main"><div class="one">${g.one}</div>
+    <div class="row plus"><div class="k">加分</div><div>${g.plus}</div></div>
+    <div class="row minus"><div class="k">扣分</div><div>${g.minus}</div></div>
+    <div class="comment">评语：${g.c}</div></div>`;
+  try{localStorage.setItem('sch-tab',id)}catch(e){}
+}
+games.forEach(g=>{const b=document.createElement('button');b.type='button';b.textContent=g.name;b.dataset.id=g.id;b.onclick=()=>show(g.id);tabs.appendChild(b)});
+let start='lets';try{const s=localStorage.getItem('sch-tab');if(s&&games.some(g=>g.id===s))start=s}catch(e){}
+show(start);
+</script>
