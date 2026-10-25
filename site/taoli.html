@@ -1,0 +1,335 @@
+<title>桃李小学</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* 布局：田字格本上的一棵桃树。主角是可拖动的"三十年"时间尺，其余内容像贴在本子上的照片和来信 */
+:root{
+  --paper:#fbf8f3; --cell:#efe2dc; --ink:#2e2a33; --soft:#6f6772;
+  --peach:#e0607e; --peach-soft:#fbe3e8; --leaf:#4f8a5b; --bark:#7a5a48;
+  --card:#ffffff; --line:#e6d9d4; --letter:#fff8e6;
+  --f-display:"ZCOOL KuaiLe","Yuanti SC","YouYuan",sans-serif;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-hand:"Ma Shan Zheng","Kaiti SC","KaiTi",cursive;
+  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1e1b21; --cell:#2a2530; --ink:#f1ebe8; --soft:#b2a8b0;
+  --peach:#ff8fa8; --peach-soft:#4a2a35; --leaf:#86c491; --bark:#c49a80;
+  --card:#27232b; --line:#3d3540; --letter:#2f2a22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1e1b21; --cell:#2a2530; --ink:#f1ebe8; --soft:#b2a8b0;
+  --peach:#ff8fa8; --peach-soft:#4a2a35; --leaf:#86c491; --bark:#c49a80;
+  --card:#27232b; --line:#3d3540; --letter:#2f2a22; color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  background-image:linear-gradient(var(--cell) 1px,transparent 1px),linear-gradient(90deg,var(--cell) 1px,transparent 1px);
+  background-size:32px 32px}
+.wrap{max-width:1000px;margin:0 auto;padding-block:36px 80px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:56px}
+h1,h2{font-family:var(--f-display);font-weight:400;margin:0;line-height:1.25;text-wrap:balance}
+h1{font-size:clamp(2.6rem,8vw,4.4rem);color:var(--peach)}
+h2{font-size:1.7rem}
+p{margin:0;max-width:65ch}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.12em;color:var(--soft)}
+section{display:flex;flex-direction:column;gap:18px}
+a{color:var(--peach)}
+
+/* 封面 */
+header{display:flex;flex-direction:column;gap:14px}
+header .lede{font-size:1.1rem}
+.locks{display:flex;flex-wrap:wrap;gap:8px}
+.locks span{background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:2px 14px;font-size:.9rem}
+.locks span b{color:var(--peach);font-weight:700;margin-right:6px}
+
+/* 三十年 */
+.life{background:var(--card);border:2px solid var(--ink);border-radius:6px;box-shadow:6px 6px 0 var(--peach-soft);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.tree{position:relative;border-right:2px solid var(--ink);min-height:360px}
+.tree canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
+.role{position:absolute;left:16px;top:14px;display:flex;flex-direction:column;gap:2px}
+.role .yr{font-family:var(--f-mono);font-weight:700;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.role .yr small{font-size:.9rem;font-weight:500;color:var(--soft)}
+.role .badge{font-family:var(--f-display);font-size:1.3rem;color:var(--leaf)}
+.tally{position:absolute;right:14px;bottom:12px;font-size:.85rem;color:var(--soft);text-align:right;line-height:1.4}
+.tally b{font-family:var(--f-mono);color:var(--peach);font-size:1.1rem}
+.year{padding:20px 22px;display:flex;flex-direction:column;gap:14px;min-width:0;min-height:360px}
+.year .scope{font-size:.9rem;color:var(--soft)}
+.ev{display:flex;flex-direction:column;gap:12px}
+.mem{background:var(--card);border:1px solid var(--line);padding:10px 12px 12px;box-shadow:0 2px 6px rgba(0,0,0,.08);transform:rotate(-1deg);max-width:420px}
+.mem .ph{height:8px;background:repeating-linear-gradient(90deg,var(--peach-soft) 0 12px,transparent 12px 18px);margin-bottom:8px}
+.mem .cap{font-family:var(--f-hand);font-size:1.3rem;line-height:1.45}
+.mem .tag,.echo .tag{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--soft)}
+.echo{background:var(--letter);border:1px solid var(--line);border-left:4px solid var(--peach);padding:10px 14px}
+.echo .t{font-weight:500}
+.echo .from{font-size:.85rem;color:var(--peach);margin-top:4px}
+.quiet{color:var(--soft);font-size:.95rem}
+.controls{grid-column:1/-1;border-top:2px solid var(--ink);padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.controls input[type=range]{flex:1 1 240px;accent-color:var(--peach);min-width:0}
+.controls button{font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1.5px solid var(--ink);border-radius:4px;padding:4px 14px;cursor:pointer}
+.controls button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.controls button:focus-visible,.controls input:focus-visible{outline:3px solid var(--peach);outline-offset:2px}
+.ticks{grid-column:1/-1;display:flex;justify-content:space-between;padding:0 18px 12px;font-family:var(--f-mono);font-size:.72rem;color:var(--soft);gap:4px;flex-wrap:wrap}
+@media (max-width:720px){.life{grid-template-columns:1fr}.tree{border-right:0;border-bottom:2px solid var(--ink);min-height:300px}.year{min-height:0}}
+
+/* 范围逐层放大 */
+.nest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
+.boxes{position:relative;aspect-ratio:1/0.8;max-width:100%}
+.boxes div{position:absolute;left:0;bottom:0;border:2px solid var(--ink);border-radius:6px;padding:6px 10px;font-family:var(--f-display);font-size:1.05rem}
+.boxes .b4{width:100%;height:100%;background:var(--peach-soft)}
+.boxes .b3{width:76%;height:74%;background:var(--card)}
+.boxes .b2{width:52%;height:50%;background:var(--paper)}
+.boxes .b1{width:28%;height:28%;background:var(--leaf);color:var(--paper)}
+.stages{display:flex;flex-direction:column;gap:12px}
+.stage{display:grid;grid-template-columns:5.5em 1fr;gap:10px}
+.stage b{font-family:var(--f-display);font-weight:400;font-size:1.15rem}
+.stage span{color:var(--soft);font-size:.95rem}
+@media (max-width:720px){.nest{grid-template-columns:1fr}}
+
+/* 记忆→回响 */
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.pair{display:flex;flex-direction:column;gap:8px}
+.pair .arrow{font-family:var(--f-mono);font-size:.78rem;color:var(--soft);padding-left:12px}
+
+/* 节奏 */
+.rhythm{overflow-x:auto}
+.rhythm table{border-collapse:collapse;width:100%;min-width:520px;background:var(--card);border:2px solid var(--ink)}
+.rhythm th,.rhythm td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.rhythm th{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;color:var(--soft);font-weight:500;white-space:nowrap}
+.rhythm td:first-child{font-family:var(--f-mono);white-space:nowrap;color:var(--peach);font-variant-numeric:tabular-nums}
+.rhythm tr:last-child td{border-bottom:0}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.two > div{display:flex;flex-direction:column;gap:8px}
+.two h3{font-family:var(--f-display);font-weight:400;font-size:1.3rem;margin:0}
+.kids{display:flex;flex-wrap:wrap;gap:6px}
+.kids em{font-style:normal;font-size:.85rem;background:var(--peach-soft);padding:1px 10px;border-radius:999px}
+
+.qs{display:flex;flex-direction:column;background:var(--card);border:2px solid var(--ink);border-radius:6px}
+.q{display:grid;grid-template-columns:2.4em 1fr;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .n{font-family:var(--f-display);font-size:1.5rem;color:var(--peach);line-height:1.2}
+.q span{color:var(--soft);font-size:.93rem;display:block}
+.sign{font-family:var(--f-hand);font-size:1.4rem;color:var(--peach)}
+footer{font-size:.85rem;color:var(--soft)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">idear · 小学模拟经营 · 概念草案 v1 · 2026.10.25</div>
+    <h1>桃李小学</h1>
+    <p class="lede">你是一位普通的小学老师。三十年里你会教很多孩子，从班主任一路做到校长。真正的奖励在很多年以后：长大的孩子们，带着当年的一段记忆回来了。</p>
+    <div class="locks" aria-label="已定下的方向">
+      <span><b>学段</b>小学</span><span><b>基调</b>放松，可诙谐，不讽刺</span><span><b>理念</b>尊重每一种</span>
+      <span><b>玩家</b>普通老师 → 校长</span><span><b>高光</b>学生多年后回报学校</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>一位老师的三十年</h2>
+    <p>拖动下面的时间尺，或者点“播放”。这是一局游戏大概的样子，孩子名字和事件都是举例。</p>
+    <div class="life">
+      <div class="tree">
+        <canvas id="tree" aria-hidden="true"></canvas>
+        <div class="role"><div class="yr" id="yr">1<small> 年</small></div><div class="badge" id="badge">班主任</div></div>
+        <div class="tally">收到的回响 <b id="tally">0</b><br>相册里的记忆 <b id="mems">0</b></div>
+      </div>
+      <div class="year" aria-live="polite">
+        <div class="scope" id="scope"></div>
+        <div class="ev" id="ev"></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="play">播放</button>
+        <label for="slider" class="eyebrow">年份</label>
+        <input type="range" id="slider" min="1" max="32" value="1">
+        <button type="button" id="sound" aria-pressed="false">铃声</button>
+      </div>
+      <div class="ticks" aria-hidden="true"><span>1 班主任</span><span>9 年级组长</span><span>15 教导主任</span><span>20 校长</span><span>32 退休</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>升一级，世界大一圈</h2>
+    <div class="nest">
+      <div class="boxes" aria-hidden="true">
+        <div class="b4">整个校园</div><div class="b3">全校课程</div><div class="b2">一个年级</div><div class="b1">一间教室</div>
+      </div>
+      <div class="stages">
+        <div class="stage"><b>班主任</b><span>一个班，十几个孩子。布置教室、排每周的课和活动、认识每一个孩子。</span></div>
+        <div class="stage"><b>年级组长</b><span>一个年级，带新来的老师，策划春游和六一。</span></div>
+        <div class="stage"><b>教导主任</b><span>全校的课程和大活动，运动会、艺术节。</span></div>
+        <div class="stage"><b>校长</b><span>盖楼、种树、招老师、管预算。到这一步才是主题公园式的建造。</span></div>
+        <p class="quiet">调研里的游戏开局就给你整座学校，结果每局开头都一样。我们从一间教室开始。等你当上校长，校友的回报也正好开始多起来，盖楼和回响在后半程会合。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>记忆照片，多年后的回信</h2>
+    <p>核心机制：上学时特别的时刻会变成老师相册里的一张照片。孩子毕业后，游戏根据他的兴趣和这些照片推演他的人生。多年后他回来时，会提到当年那张照片。</p>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <section>
+    <h2>回响的节奏</h2>
+    <p>最大的回报要等十几年，所以回响要一层层来，第一届一毕业就开始有。</p>
+    <div class="rhythm"><table>
+      <thead><tr><th>毕业后</th><th>可能的回响</th></tr></thead>
+      <tbody>
+        <tr><td>1 年</td><td>教师节回来送贺卡，字还是歪的</td></tr>
+        <tr><td>3–6 年</td><td>中学生回来看老师，报喜、诉苦</td></tr>
+        <tr><td>7–10 年</td><td>考上大学的报喜信；大学生回来当志愿者</td></tr>
+        <tr><td>10 年以上</td><td>带着本事回来：讲座、捐设备、上一节自己行业的课</td></tr>
+        <tr><td>15 年以上</td><td>回校任教、捐楼冠名、把自己的孩子送进学校</td></tr>
+        <tr><td>退休那天</td><td>桃李宴：一辈子教过的学生回来聚一聚</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="two">
+    <div>
+      <h3>每个孩子都是具体的人</h3>
+      <p>一个班控制在记得住名字的人数。每个孩子有藏着的兴趣，接触到不同活动后才显露。诙谐来自童真：</p>
+      <div class="kids"><em>换牙说话漏风</em><em>午睡打呼</em><em>b 和 d 分不清</em><em>不敢举手</em><em>把橡皮切成十块</em><em>第一次戴红领巾</em></div>
+      <p>没有差生，也没有失败惩罚。每个孩子都会走出自己的路，面包师和科学家一样会回来。</p>
+    </div>
+    <div>
+      <h3>每种教法都是好教法</h3>
+      <p>严一点或松一点，多练还是多玩，都是合法的风格。不同风格会养出不同特质的孩子，没有哪种得分更高，只是长成的人不一样，回来的方式也不一样。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>接下来想和你定的事</h2>
+    <div class="qs">
+      <div class="q"><div class="n">一</div><div>一学年玩多久？一局是不是就是整个三十年？<span>我的倾向：一学年 20–30 分钟，一局完整走完职业生涯，退休后可以开下一位老师的新局。</span></div></div>
+      <div class="q"><div class="n">二</div><div>一个班几个孩子？<span>真实班级四五十人，但玩家记不住。倾向 12–20 人，其余做成背景里的同学。</span></div></div>
+      <div class="q"><div class="n">三</div><div>升迁自动还是自己选？能不能一辈子当班主任？<span>倾向可以拒绝升迁。只当班主任也能走完一局，只是回响的样子不同。</span></div></div>
+      <div class="q"><div class="n">四</div><div>要不要用女儿一年级的真实小事当素材？<span>童言和小事最能让游戏有温度。需要家里人同意，名字和细节可以改掉。</span></div></div>
+      <div class="q"><div class="n">五</div><div>先做什么？<span>倾向先做一个网页小原型，只做“一个班、六年、毕业后快进十五年”，验证回信那一下是否打动人。</span></div></div>
+    </div>
+    <p class="sign">暂名《桃李》，取“桃李满天下”。名字也可以再想。</p>
+  </section>
+
+  <footer>同类游戏调研见 <a href="https://claude.ai/artifact/CJzXFX9BvymoohAebWXodE">别人的学校都是怎么盖的</a>。</footer>
+</div>
+
+<script>
+const ROLE=y=>y>=32?"退休":y>=20?"校长":y>=15?"教导主任":y>=9?"年级组长":"班主任";
+const SCOPE={"班主任":"管：一间教室、一个班","年级组长":"管：一个年级、几位新老师","教导主任":"管：全校课程和大活动","校长":"管：整个校园","退休":"这一天，学生们回来了"};
+// 举例数据：mem 是记忆照片，echo 是回响，from 指向它源自哪一年的记忆
+const Y={
+ 1:[{m:"开学第一天，小满抱着妈妈的腿哭，不肯进教室。",n:"接手一年级二班，18 个孩子"}],
+ 2:[{m:"带全班在操场看蚂蚁搬家，小周趴着看了一整节课。"}],
+ 3:[{m:"春游遇上大雨，全班在大巴上唱了一路《小跳蛙》。"}],
+ 4:[{m:"种豆芽比赛，乐乐的豆芽长歪了，可还是最高的那根。"}],
+ 5:[{m:"六一联欢会，阿杰忘词，当场自己编了一段，全场笑翻。"}],
+ 6:[{m:"毕业合影。小满这回是笑着挥手的。",n:"第一届毕业"}],
+ 7:[{e:"教师节，第一届的六个孩子回来送贺卡，字还是歪的。",n:"接第二届一年级"}],
+ 9:[{e:"阿杰写信说初中数学好难，问老师当年怎么不多教点。",n:"升任年级组长"}],
+ 13:[{e:"乐乐考上农业大学，报喜信里画了一根歪豆芽。",f:4}],
+ 15:[{e:"小满大学放暑假，回来当志愿者，蹲下来哄一个哭鼻子的一年级新生。",f:1,n:"升任教导主任"}],
+ 17:[{e:"阿杰成了说相声的，回来主持六一联欢会，开场就讲自己当年忘词。",f:5}],
+ 19:[{e:"快递员小林，连续第十年在教师节送来全班同学的明信片。"}],
+ 20:[{n:"升任校长，解锁全校建造"}],
+ 21:[{e:"昆虫学家小周捐建了一间昆虫标本室，感谢信里夹着那张看蚂蚁的照片。",f:2}],
+ 23:[{e:"小满师范毕业，回到学校任教，是你当校长后招的第一位老师。",f:6}],
+ 25:[{e:"乐乐培育的新豆种，种满了学校的新植物园。",f:4}],
+ 26:[{e:"第一届学生的孩子入学了，分进的正是小满老师带的一年级。"}],
+ 28:[{e:"消防员大刘回来搞消防演练，顺便给孩子们表演爬杆。"}],
+ 32:[{e:"桃李宴。一百多个学生回来了，有人还带着当年那张歪歪扭扭的贺卡。",n:"退休"}]
+};
+const ev=document.getElementById('ev'),slider=document.getElementById('slider');
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function memOf(y){return (Y[y]||[]).find(x=>x.m)}
+function count(y,k){let c=0;for(let i=1;i<=y;i++)(Y[i]||[]).forEach(x=>{if(x[k])c++});return c}
+
+function render(y,chime){
+  const role=ROLE(y);
+  document.getElementById('yr').innerHTML=y+'<small> 年</small>';
+  document.getElementById('badge').textContent=role;
+  document.getElementById('scope').textContent=SCOPE[role];
+  document.getElementById('tally').textContent=count(y,'e');
+  document.getElementById('mems').textContent=count(y,'m');
+  const items=Y[y]||[];let html='';
+  items.forEach(x=>{
+    if(x.n)html+=`<div class="eyebrow">${esc(x.n)}</div>`;
+    if(x.m)html+=`<div class="mem"><div class="ph"></div><div class="tag">记忆照片 · 第 ${y} 年</div><div class="cap">${esc(x.m)}</div></div>`;
+    if(x.e){html+=`<div class="echo"><div class="tag">回响 · 第 ${y} 年</div><div class="t">${esc(x.e)}</div>`;
+      if(x.f){const mm=memOf(x.f);html+=`<div class="from">源自第 ${x.f} 年的记忆：${esc(mm.m)}</div>`}
+      html+='</div>';}
+  });
+  if(!items.some(x=>x.m||x.e))html+=`<p class="quiet">平常的一年。上课、改作业、开家长会，孩子们一天天长高。</p>`;
+  ev.innerHTML=html;
+  drawTree(y);
+  if(chime&&items.some(x=>x.e))ring();
+}
+
+// 桃树：枝条按年份长出，花朵数量跟着回响增加
+const cv=document.getElementById('tree'),ctx=cv.getContext('2d');
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const branches=[];
+(function grow(x,y,ang,len,d,born){
+  const x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len;
+  branches.push({x,y,x2,y2,d,born});
+  if(d>=6)return;
+  const n=d<2?2:2+(rnd()>.6?1:0);
+  for(let i=0;i<n;i++){
+    const a=ang+(i-(n-1)/2)*(0.55+rnd()*0.25)+(rnd()-.5)*.2;
+    grow(x2,y2,a,len*(0.68+rnd()*0.12),d+1,born+3+Math.floor(rnd()*3));
+  }
+})(0,0,-Math.PI/2,1,0,0);
+const tips=branches.filter(b=>b.d>=4).sort(()=>rnd()-.5);
+function tok(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function drawTree(year){
+  const r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,r.width,r.height);
+  const s=Math.min(r.height*0.27,r.width*0.3),ox=r.width*0.55,oy=r.height-18;
+  ctx.strokeStyle=tok('--line');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ox-s*1.4,oy);ctx.lineTo(ox+s*1.4,oy);ctx.stroke();
+  const bark=tok('--bark'),leaf=tok('--leaf'),peach=tok('--peach');
+  ctx.lineCap='round';
+  branches.forEach(b=>{
+    if(b.born>year)return;
+    const p=Math.min(1,(year-b.born+1)/3);
+    ctx.strokeStyle=bark;ctx.lineWidth=Math.max(1,(7-b.d)*1.6);
+    ctx.beginPath();ctx.moveTo(ox+b.x*s,oy+b.y*s);ctx.lineTo(ox+(b.x+(b.x2-b.x)*p)*s,oy+(b.y+(b.y2-b.y)*p)*s);ctx.stroke();
+    if(b.d>=3&&p===1){ctx.fillStyle=leaf;ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(ox+b.x2*s,oy+b.y2*s,4,2.4,b.d,0,7);ctx.fill();ctx.globalAlpha=1}
+  });
+  const live=tips.filter(b=>b.born<=year);
+  const n=Math.min(live.length,count(year,'e')*4+count(year,'m'));
+  for(let i=0;i<n;i++){const b=live[i];const cx=ox+b.x2*s,cy=oy+b.y2*s;
+    ctx.fillStyle=peach;for(let k=0;k<5;k++){const a=k*1.2566+i;ctx.beginPath();ctx.arc(cx+Math.cos(a)*3.2,cy+Math.sin(a)*3.2,2.6,0,7);ctx.fill()}
+    ctx.fillStyle=tok('--card');ctx.beginPath();ctx.arc(cx,cy,1.4,0,7);ctx.fill();}
+}
+
+// 上课铃：两声轻柔的音，只在有回响的年份响
+let ac=null,soundOn=false;
+function ring(){if(!soundOn)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+  [[784,0],[659,.22]].forEach(([f,t])=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0,ac.currentTime+t);g.gain.linearRampToValueAtTime(.12,ac.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.9);
+    o.connect(g).connect(ac.destination);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+1)})}catch(e){}}
+document.getElementById('sound').onclick=e=>{soundOn=!soundOn;e.currentTarget.setAttribute('aria-pressed',soundOn);if(soundOn)ring()};
+
+slider.addEventListener('input',()=>render(+slider.value,true));
+let timer=null;const playBtn=document.getElementById('play');
+playBtn.onclick=()=>{
+  if(timer){clearInterval(timer);timer=null;playBtn.textContent='播放';return}
+  if(+slider.value>=32)slider.value=1;
+  playBtn.textContent='暂停';render(+slider.value,true);
+  timer=setInterval(()=>{const v=+slider.value+1;if(v>32){clearInterval(timer);timer=null;playBtn.textContent='播放';return}
+    slider.value=v;render(v,true)},1100);
+};
+
+// 记忆→回响配对卡
+document.getElementById('pairs').innerHTML=[[2,21],[4,13],[5,17],[1,15],[6,23]].map(([m,e])=>{
+  const mm=memOf(m),ee=Y[e].find(x=>x.e);
+  return `<div class="pair"><div class="mem"><div class="ph"></div><div class="tag">第 ${m} 年 · 记忆照片</div><div class="cap">${esc(mm.m)}</div></div>
+    <div class="arrow">↓ ${e-m} 年后</div><div class="echo"><div class="tag">第 ${e} 年 · 回响</div><div class="t">${esc(ee.e)}</div></div></div>`}).join('');
+
+render(1,false);
+window.addEventListener('resize',()=>drawTree(+slider.value));
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>drawTree(+slider.value));
+new MutationObserver(()=>drawTree(+slider.value)).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+document.fonts&&document.fonts.ready.then(()=>drawTree(+slider.value));
+</script>

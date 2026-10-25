@@ -6,6 +6,7 @@
 
 - 做成好看的 HTML 页面（可以有图表、动效、音效），发布成 Artifact，不要只丢 Markdown
 - 留声的页面：`site/voice-legacy.html`，地址 https://claude.ai/artifact/1QaeueSfTMhVojsBU7BmyA ，更新时重新发布到同一个地址
+- 小学模拟经营游戏（暂名《桃李》）：概念页 `site/taoli.html` → https://claude.ai/artifact/Uj2XbkgG7uioRvoGRB2ktc ；调研页 `site/school-sim.html` → https://claude.ai/artifact/CJzXFX9BvymoohAebWXodE ；底稿 `ideas/school-sim.md`、`ideas/school-sim-research.md`。用户定下的方向见 `ideas/school-sim.md` 开头，不质疑
 - Markdown 文档（`ideas/`）是底稿，页面是给人看的
 
 ## 留声：每日灵感巡游
