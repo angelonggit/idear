@@ -5,6 +5,22 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-10-27 · 开源项目
+
+### 发现
+- **手机上"删掉原始录音"其实删不干净**：闪存有磨损均衡，控制器会把数据写到别的物理位置，覆盖一个文件不等于抹掉它原来那份。Guardian Project 的结论是：只有数据在落到闪存之前就已加密，丢掉钥匙才算真正删除。苹果的做法是把钥匙放在一块不做磨损均衡的"可擦除"存储里。苏黎世联邦理工的 DNEFS 论文也是"每块单独加密、删钥匙即删数据"的思路。这些资料多是 2011–2013 年的，现在的手机细节未确认。[Guardian Project](https://guardianproject.info/2013/08/23/keeping-data-private-means-it-must-be-truly-deletable/) · [ETH DNEFS](https://www.research-collection.ethz.ch/entities/publication/0b90d359-49d0-4687-aa47-fa99ae530827) · [USENIX Security '12](https://usenix.org/conference/usenixsecurity12/technical-sessions/presentation/reardon)
+- **libsodium secretstream：一段一段地加密**：开源加密库 libsodium 的流式加密，适合"边录边加密"：每一小段单独加密、单独校验；最后一段打上 FINAL 标记，表示正常结束；没有 FINAL 的流，读的人就知道它是中途断掉的。是否检查这个标记要应用自己做。[libsodium 文档](https://libsodium.gitbook.io/doc/~/revisions/-LL5wcLSbESuQhMZUBZo/secret-key_cryptography/secretstream)
+- **Oblivious HTTP 的开源实现已经有好几个**：Cloudflare 的 Go 网关 privacy-gateway-server-go、Martin Thomson（RFC 作者之一）的 Rust 库、openpcc 的 Go 库（支持密钥轮换和分块消息）。中继这一端搜索结果没有直接找到现成仓库，现状未确认。文档反复提醒：中继和网关要是同一方运营，隐私就不成立。[Cloudflare 文档](https://developers.cloudflare.com/privacy-gateway/llms-full.txt) · [openpcc/ohttp](https://pkg.go.dev/github.com/openpcc/ohttp)
+- **BBC 的 audiowaveform：轮廓可以粗到什么程度**：BBC 研发部门开源的 C++ 工具，从 MP3、WAV、FLAC、Ogg 生成波形峰值数据，可以设每秒几个点（例子用每秒 20 个点）、8 位精度。"墙上的轮廓"如果要做，就是它的一个极简用法：单声道、每秒几个点，再统一拉成一样宽。[Peaks.js](https://redirect.github.com/bbc/peaks.js) · [Auphonic](https://auphonic.com/blog/2014/03/31/rendering-audio-waveforms-browser/)
+- **OpenTimestamps 公共日历免费，自己跑要有比特币钱包**：官方客户端有 Python 和 JavaScript 两套。公共日历服务器免费用；如果留声想自己跑一个日历（otsd），需要一个有余额的比特币节点钱包，而且这个钱包不能另作他用；目前还只能在前台运行。[OpenTimestamps](https://opentimestamps.org/) · [opentimestamps-server](https://github.com/conscott/opentimestamps-server)
+
+### 今天的一个想法
+"钥匙当场销毁"要成立，原始声音从一开始就不能以明文落到手机的闪存上。 已定的流程写的是"加密后立刻销毁钥匙，删掉原始录音"，但闪存的磨损均衡让"删掉"不可靠。改成：录音时钥匙只放在内存里，声音每一小段先用 secretstream 加密再写进闪存，说完打上 FINAL，钥匙随之丢掉，手机上从头到尾只有密文。这样还顺带回答了"录到一半手机没电、被系统杀掉"怎么办：钥匙本来就只在内存里，断了就没了，已经写下的密文照样上传、照样上墙，只是没有 FINAL，说明它是断掉的。这和"说了就说了""录音不会自动结束"都不冲突。如果要轮廓，也只能在录音时从内存里顺手算出来（每秒几个点、单声道），钥匙一丢就再也算不出来了。
+
+### 可以继续挖
+- 现在的 iOS / 安卓上，"只在内存里的钥匙"能不能防住系统把内存换出到闪存（swap、休眠快照）
+- 墙上要不要区分"正常说完的"和"中途断掉的"：用没用 FINAL 来区分，算不算从内容里多泄露了一点信息
+
 ## 2026-10-26 · 极客社区
 
 ### 发现
