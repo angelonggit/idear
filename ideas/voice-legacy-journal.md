@@ -5,6 +5,21 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-10-30 · 技术细节
+
+### 发现
+- **公开账本也可能"两面说话"：见证人联署**：透明度日志有一种攻击叫"分裂视图"：日志给不同的人看两份不同的历史，比如给某些人看的版本里悄悄少了几行。办法是找几个独立的"见证人"，每次先验证新的账本状态和自己签过的旧状态一致，再联署；单个见证人只能证明只追加，多个（建议奇数个、按法定人数）才能发现分裂视图。transparency.dev 的 Armored Witness 是开源硬件、可复现构建的见证设备，想建一个跨生态的见证人网络。见证人只管一致性，不管每一行的内容。[transparency.dev witness](https://pkg.go.dev/github.com/transparency-dev/witness) · [Armored Witness](https://github.com/transparency-dev/armored-witness) · [博客](https://blog.transparency.dev/can-i-get-a-witness-network)
+- **跑一本公开账本要多少钱：Sunlight 的实测**：Let's Encrypt 2024 年推出的 Sunlight，把证书透明度日志存成静态"瓦片"，放对象存储或普通网页服务器就行。作者 Filippo Valsorda 运营的 Tuscolo 日志用一台独立服务器，硬件加托管一年约 7760 英镑（约 1 万美元）；他 2026 年还说当初的估算很保守，服务器配置过高。这是承载全网 HTTPS 证书的量，留声的量小得多。[Let's Encrypt](https://letsencrypt.org/2024/03/14/introducing-sunlight) · [Filippo Valsorda](https://words.filippo.io/run-sunlight/) · [Tuscolo](https://groups.google.com/a/chromium.org/g/ct-policy/c/KCzYEIIZSxg/m/zD26fYw4AgAJ)
+- **钥匙只在内存里，会不会被换到闪存上**：安卓不在闪存上做交换分区，用的是 zRAM：把不常用的内存页压缩后仍放在内存里，理由之一就是避免磨损闪存。这些资料偏老。iOS 这边，苹果平台安全指南写明：最高保护级别的类密钥在锁屏约 10 秒后从内存丢弃；"可擦除存储"是一小块专门用来快速抹除钥匙的闪存区域。iOS 是否会把应用内存写到闪存上，这次没查到，现状未确认。[ElasticZRAM](https://pure.ecnu.edu.cn/en/publications/elasticzram-revisiting-zram-for-swapping-on-mobile-devices/) · [Apple 平台安全](https://support.apple.com/guide/security/secb010e978a/web)
+- **钥匙一毁，指纹就证明不了"那是一段声音"**：哈希承诺能证明"某时某刻有人固定了一串数据"，但验证要拿到原数据；钥匙销毁后，一串加密的录音和一串随机字节算出来的指纹看起来完全一样。谁都能几乎零成本地发一个哈希，所以光有指纹挡不住垃圾。常见补法是：事后公开原数据、用零知识证明证明数据的某种性质，或者给每条记录配上成本或可验证的来源。这一条是搜索摘要里的推理，不是哪篇论文的结论。[Chainlink](https://chain.link/article/commitment-scheme-overview)
+
+### 今天的一个想法
+墙能证明的，其实是"这一行是这样写进来的，之后没人动过"，而不是"那确实是一段声音"。 这和已定的"真假不管"正好一致，只是要让墙在这一点上更诚实。具体可以拆成三件事，每件都有现成做法：一是**写进来的方式**：每一行附一张 Privacy Pass 令牌的核验结果，说明它是从留声 App 正常录完上传的，不是脚本灌的，但不知道是谁；二是**没人动过**：账本定期请几个互不相干的见证人联署，再锚定到比特币，任何人都能查墙有没有被删行、有没有给不同人看不同版本；三是**墙上那句话**：不说"这里有一段声音"，而说"有人在这里留下了声音"，前者无法证明，后者是这面墙能负责的全部。成本上，Sunlight 的经验说明，一本静态账本一年的花费远低于存录音本身。
+
+### 可以继续挖
+- 见证人谁来当：能不能直接加入 transparency.dev 或 Sigsum 现有的见证人网络，还是要另找几个认同这件事的人
+- iOS 有没有"应用内存写到闪存"的情况（比如休眠、应用快照），以及 Swift 里怎么让一块内存不被换出、用完就清零
+
 ## 2026-10-29 · 口述习俗与哀伤心理学
 
 ### 发现
