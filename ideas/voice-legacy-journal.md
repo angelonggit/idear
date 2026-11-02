@@ -5,6 +5,21 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-11-03 · 开源项目
+
+### 发现
+- **F-Droid 的可复现构建：证明手机上装的就是公开的那份代码**：F-Droid 从源码自己再编一遍 App，和开发者签名发布的安装包逐字节比对，一致就说明发布过程没有偷偷改代码。2025 年起每个 App 页面都有"可复现状态"链接，列出每次验证结果，对不上的会用 diffoscope 标出差在哪。F-Droid 自己也说，只看徽章等于信任他们，真正可靠的是第三方自己去编。[F-Droid](https://f-droid.org/ja/2025/05/21/making-reproducible-builds-visible.html) · [LWN](https://lwn.net/Articles/633273)
+- **Rust 的 zeroize：清零内存，但它自己写明了清不到哪里**：用 volatile 写入加内存屏障，保证编译器不会把"清零"优化掉。文档同时写明了局限：Vec 扩容时留下的旧副本清不到，栈上的临时副本、CPU 寄存器也清不到，不管 mlock 防换出，也不防硬件旁路。[docs.rs](https://docs.rs/zeroize/=1.9.1/)
+- **Google 的 Oboe：安卓上要"未处理"录音的现成写法**：Oboe 是谷歌的开源 C++ 音频库，输入预设里有 Unprocessed，文档提醒这样没有自动增益、音量可能很小，而且只在 Android 9（API 28）以上生效；底层在新系统用 AAudio，老系统用 OpenSL ES，配置失败时会退回别的预设。这和 10 月 23 日记的"先查设备支不支持"是一回事，退回时 App 要知道。[docs.rs：oboe InputPreset](https://docs.rs/oboe/latest/oboe/enum.InputPreset.html)
+- **Privacy Pass 有开源的发行端了**：Cloudflare 公开了 TypeScript 库 privacypass-ts、跑在 Workers 上的参考发行端 privacypass-issuer（带密钥轮换）和参考认证端 privacypass-attester，还有 Go 的 pat-go；另有一个 Rust 实现，作者注明没有经过独立审计。"按时间段限量"的令牌目前仍是草案，苹果工程师 2025 年又提了一个更省的 ARC 方案。[Cloudflare 文档](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/index.md) · [IETF 草案](https://datatracker.ietf.org/doc/html/draft-privacypass-rate-limit-tokens-03)
+
+### 今天的一个想法
+"钥匙当场销毁"能不能让人信，不取决于我们怎么说，而取决于别人能不能自己核对。 10 月 24 日记过，这句话要站得住，销毁得发生在开源、可审计的代码里；今天找到的是让"可审计"落地的那一环：可复现构建。只开源不够，用户装的那个安装包，得能被任何人从公开源码编出一模一样的字节，才能证明手机上跑的确实是那段"用完就丢钥匙"的代码。安卓这边 F-Droid 已经有现成的流程和公开的验证页面；iOS 的 App Store 包没有这条路，只能靠审计源码，这是两边要如实写清的差别。另一个具体点来自 zeroize 的文档：它很坦白地写了清不到哪里。留声对"钥匙销毁"的说法也可以照这个口径写：哪些地方保证清掉了，哪些地方（寄存器、系统换出、硬件）做不到保证。这和"真实优先"是同一种态度。
+
+### 可以继续挖
+- iOS 上有没有接近可复现构建的做法，或者第三方核对 App Store 安装包和源码是否一致的先例（比如 Signal 的做法）
+- 国内安卓应用商店（华为、小米等）会不会重新签名或改动安装包，这会不会让"和源码逐字节一致"在国内渠道失效
+
 ## 2026-11-02 · 极客社区
 
 ### 发现
