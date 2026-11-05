@@ -5,6 +5,21 @@
 
 <!-- 新条目插入在这一行下面 -->
 
+## 2026-11-06 · 技术细节
+
+### 发现
+- **iOS 一般不把应用内存写进闪存，但新款 iPad 例外**：苹果开发者论坛和 WWDC 2018"iOS 内存深入"的整理都说，iOS 没有传统的磁盘交换，应用写过的内存不会被换到闪存上，内存紧张时系统先压缩、再让应用释放或直接杀掉，理由之一是减少闪存写入。但 XNU 内核自带的"冻结器"文档写着：内存紧张时会挑一些后台应用"冻结"，把它们的内存压缩后换出到交换文件，并提到"支持交换的 iPad（目前是 M1 及以后）"。哪些 iPhone 会这样，没查到。[XNU freezer 文档](https://cs.iossec.tech/xnu/latest/source/doc/vm/freezer.md) · [WWDC 2018 整理](https://suelan.github.io/2020/05/03/An-glimpse-of-iOS-Memory-Deep-Dive)
+- **安卓 14：后台长时间录音必须挂"麦克风"类型的前台服务**：面向安卓 14 的应用，用麦克风的前台服务要同时声明 microphone 服务类型、FOREGROUND_SERVICE_MICROPHONE 权限和 RECORD_AUDIO，缺一样会抛异常崩溃；系统会显示麦克风橙点和常驻通知。有开发者文章说，没有前台服务时后台录到的是空缓冲。都是开发者博客的说法，没核对官方文档。[devbytes](https://devbytes.co.in/news/changes-to-microphone-permission-model-in-android-14) · [DEV Community](https://dev.to/agnihotripushkar/everything-that-can-interrupt-your-microphone-on-android-and-how-to-handle-it-68b)
+- **对称加密和量子计算：256 位留足了余量**：Grover 算法只给量子计算机平方级的加速，所以 256 位对称钥匙大约还剩 128 位的安全强度。NIST 后量子标准把安全等级 1、3、5 分别对应到破解 AES-128、192、256 的难度。据 Filippo Valsorda 的文章，NIST 的后量子 FAQ 说不影响现有对称算法和钥匙长度；也有厂商文章说 NIST 建议加倍到 256 位，NSA 的 CNSA 2.0 则要求 AES-256。NIST 原文没读到。这回答了 11 月 2 日留下的问题：留声只用 256 位对称钥匙的话，两种口径下都够。[Filippo Valsorda](https://words.filippo.io/128-bits/) · [encryptionconsulting](https://www.encryptionconsulting.com/grovers-algorithm-and-aes-256/)
+- **iOS 切到后台时会给屏幕拍快照，存在应用目录里**：苹果技术问答 QA1838 说，应用进后台后系统会给窗口截一张图用于多任务界面，开发者可以在 applicationDidEnterBackground 里先换上空白画面；SANS 的文章指出这些快照存在应用容器的目录里，越狱或没锁的手机上能被读到。留声屏幕上只有按钮和波形，没有声音内容，这一条风险不大，记下备查。[Apple QA1838](https://developer.apple.com/library/ios/qa/qa1838/_index.html) · [SANS ISC](https://isc.sans.edu/diary/Side-channel+information+leakage+in+mobile+applications/23487)
+
+### 今天的一个想法
+"录音不会自动结束"和"钥匙只在内存里、不落闪存"，在系统层面要靠同一件事撑住：锁定录音期间，App 必须一直是"正在录音"的状态，不能被系统冻结或挂起。 已定的态度是录音不会自动结束，用户迟早会回来处理。落到系统上，安卓要挂一个麦克风类型的前台服务，iOS 要开后台音频模式。这样即使锁屏、切到别的应用，录音也照常进行，系统也不会把 App 冻结、把内存换到闪存上，上面 iPad 那种情况就碰不到。真正的缝隙在"被打断"：来电话、别的应用抢了麦克风、系统还是把 App 杀了。杀掉的情况 10 月 27 日已经想过：钥匙只在内存里，没了就没了，已经写下的密文照样上墙，标成断掉的。来电话这种"录音停了但 App 还活着"的情况，钥匙要在内存里留多久、要不要等用户回来接着说，和"不会自动结束"直接相关，留给你定。
+
+### 可以继续挖
+- iOS 开着后台音频模式录音时，被来电打断后系统多久会挂起 App，挂起的 App 在 iPhone 上会不会被冻结器换出到闪存
+- 国内安卓系统（MIUI、ColorOS、鸿蒙等）对前台服务的额外限制，会不会在锁屏一段时间后强行停掉录音
+
 ## 2026-11-05 · 口述传统与哀伤心理学
 
 ### 发现
